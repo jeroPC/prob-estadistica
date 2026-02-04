@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poisson Ultimate: Análisis Profundo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; }
+        .serif { font-family: 'Lora', serif; }
+        
+        /* Cajas de Teoria */
+        .theory-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; overflow: hidden; margin-bottom: 2rem; }
+        .theory-header { background: #f8fafc; padding: 1.5rem; border-bottom: 1px solid #e2e8f0; }
+        .theory-body { padding: 2rem; }
+        
+        /* Estilos Matemáticos */
+        .math-block { background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 1.5rem; font-family: 'Lora', serif; margin: 1.5rem 0; overflow-x: auto; }
+        .step-number { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; font-size: 0.8rem; margin-right: 0.5rem; }
+        
+        /* Colores semánticos */
+        .bg-past { background-color: #f1f5f9; color: #64748b; }
+        .bg-pivot { background-color: #e0e7ff; color: #4338ca; border-color: #818cf8; }
+        .bg-future { background-color: #f0fdf4; color: #15803d; }
+    </style>
+</head>
+<body class="py-12 px-4 lg:px-8">
+
+    <div class="max-w-5xl mx-auto">
+
+        <header class="mb-12 text-center">
+            <div class="inline-block bg-slate-900 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
+                Guía Definitiva
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">El Problema de los Colectivos</h1>
+            <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+                Desde la deducción lógica hasta la resolución detallada usando la propiedad Binomial.
+            </p>
+        </header>
+
+        <section class="theory-card">
+            <div class="theory-header flex items-center justify-between">
+                <h2 class="text-xl font-bold text-slate-800">1. Arquitectura del Problema</h2>
+                <span class="text-xs font-mono bg-slate-200 px-2 py-1 rounded text-slate-600">INDEPENDENCIA</span>
+            </div>
+            <div class="theory-body">
+                <p class="mb-6 leading-relaxed">
+                    Dividimos el tiempo en 3 bloques disjuntos de 1 hora. La propiedad clave es que lo que pasa en un bloque no afecta al otro (salvo por la condición impuesta).
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="border rounded-xl p-5 bg-past border-slate-200 relative">
+                        <span class="absolute top-0 left-0 bg-slate-300 text-white text-[10px] font-bold px-2 py-1 rounded-br-lg">10:00 - 11:00</span>
+                        <div class="mt-4 text-center">
+                            <div class="text-3xl serif font-bold mb-1">\(X_A\)</div>
+                            <div class="text-xs font-mono opacity-75">\(\lambda = 2.5\)</div>
+                        </div>
+                    </div>
+                    <div class="border-2 rounded-xl p-5 bg-pivot shadow-lg relative z-10 scale-105">
+                        <span class="absolute top-0 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-bold px-3 py-1 rounded-b-lg">INTERSECCIÓN</span>
+                        <div class="mt-4 text-center">
+                            <div class="text-4xl serif font-bold mb-1">\(X_B\)</div>
+                            <div class="text-xs font-mono text-indigo-700 font-bold">\(\lambda = 2.5\)</div>
+                        </div>
+                    </div>
+                    <div class="border rounded-xl p-5 bg-future border-green-200 relative">
+                        <span class="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">12:00 - 13:00</span>
+                        <div class="mt-4 text-center">
+                            <div class="text-3xl serif font-bold mb-1">\(X_C\)</div>
+                            <div class="text-xs font-mono opacity-75">\(\lambda = 2.5\)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 flex flex-col md:flex-row justify-around items-center gap-4 text-sm">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-red-500"></i>
+                        <span><strong>Condición:</strong> \(X_A + X_B = 3\)</span>
+                    </div>
+                    <div class="hidden md:block w-px h-8 bg-slate-300"></div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-green-600"></i>
+                        <span><strong>Objetivo:</strong> \(X_B + X_C = 1\)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="theory-card border-l-4 border-l-amber-500">
+            <div class="theory-header bg-amber-50 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold">2</div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Resolución Práctica (Método Binomial)</h2>
+                    <p class="text-xs text-amber-700 font-bold uppercase tracking-widest mt-1">Paso a paso detallado</p>
+                </div>
+            </div>
+            
+            <div class="theory-body">
+                <div class="mb-8 border-b border-slate-100 pb-8">
+                    <h3 class="font-bold text-slate-800 mb-4">A. Configuración de la Binomial</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Sabemos que en el intervalo total \(A+B\) cayeron 3 colectivos. Como ambos intervalos duran 1 hora, la probabilidad de caer en uno u otro es equitativa.
+                    </p>
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <div class="text-xs text-slate-400 font-bold uppercase">Total Eventos</div>
+                            <div class="text-2xl font-serif font-bold text-slate-800">\(n = 3\)</div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <div class="text-xs text-slate-400 font-bold uppercase">Prob. Éxito (Caer en B)</div>
+                            <div class="text-2xl font-serif font-bold text-blue-600">\(p = 0.5\)</div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <div class="text-xs text-slate-400 font-bold uppercase">Distribución</div>
+                            <div class="text-sm font-serif font-bold text-slate-700 mt-2">\(X_B \sim Bin(3, 0.5)\)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="font-bold text-slate-800 mb-4">B. Cálculo de los Dos Escenarios Posibles</h3>
+                
+                <div class="space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-slate-50 px-4 py-2 border-b border-slate-200 flex justify-between items-center">
+                            <span class="font-bold text-sm text-slate-700">ESCENARIO 1: El colectivo cae en B</span>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded font-mono">B=1, C=0</span>
+                        </div>
+                        <div class="p-6 grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <div class="text-xs font-bold text-slate-400 uppercase mb-2">Parte Binomial (Pasado)</div>
+                                <p class="text-sm text-slate-600 mb-2">
+                                    De los 3 colectivos totales, seleccionamos 1 para que caiga en B.
+                                </p>
+                                <div class="font-serif text-lg text-blue-700">
+                                    \(\binom{3}{1} (0.5)^1 (0.5)^2 = 3 \cdot 0.125\)
+                                </div>
+                                <div class="text-xs text-slate-400 mt-1">Implicitamente A=2</div>
+                            </div>
+                            <div class="border-l border-slate-100 pl-8">
+                                <div class="text-xs font-bold text-slate-400 uppercase mb-2">Parte Poisson (Futuro)</div>
+                                <p class="text-sm text-slate-600 mb-2">
+                                    En C no debe caer nada.
+                                </p>
+                                <div class="font-serif text-lg text-green-700">
+                                    \(P(X_C=0) = e^{-2.5}\)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-blue-50 px-6 py-3 text-right font-mono text-sm font-bold text-blue-800">
+                            Resultado Parcial = 0.375 · \(e^{-2.5}\)
+                        </div>
+                    </div>
+
+                    <div class="bg-white border-2 border-amber-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div class="bg-amber-50 px-4 py-2 border-b border-amber-100 flex justify-between items-center">
+                            <span class="font-bold text-sm text-amber-800">ESCENARIO 2: El colectivo cae en C</span>
+                            <span class="text-xs bg-amber-200 text-amber-900 px-2 py-1 rounded font-mono">B=0, C=1</span>
+                        </div>
+                        <div class="p-6 grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <div class="text-xs font-bold text-slate-400 uppercase mb-2">Parte Binomial (Pasado)</div>
+                                <p class="text-sm text-slate-600 mb-2">
+                                    De los 3 colectivos totales, seleccionamos 0 para B (todos van a A).
+                                </p>
+                                <div class="font-serif text-lg text-amber-700">
+                                    \(\binom{3}{0} (0.5)^0 (0.5)^3 = 1 \cdot 0.125\)
+                                </div>
+                                <div class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded inline-block mt-2 font-bold">
+                                    ¡Aquí están los 3 de A!
+                                </div>
+                            </div>
+                            <div class="border-l border-slate-100 pl-8">
+                                <div class="text-xs font-bold text-slate-400 uppercase mb-2">Parte Poisson (Futuro)</div>
+                                <p class="text-sm text-slate-600 mb-2">
+                                    En C debe caer exactamente 1.
+                                </p>
+                                <div class="font-serif text-lg text-green-700">
+                                    \(P(X_C=1) = 2.5 \cdot e^{-2.5}\)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-amber-50 px-6 py-3 text-right font-mono text-sm font-bold text-amber-800">
+                            Resultado Parcial = 0.125 · 2.5 · \(e^{-2.5}\) = 0.3125 · \(e^{-2.5}\)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="theory-card">
+            <div class="theory-header">
+                <h2 class="text-xl font-bold text-slate-800">3. ¿Por qué funciona el truco? (Demostración)</h2>
+                <p class="text-sm text-slate-500 mt-1">Prueba matemática de que Poisson Condicional = Binomial.</p>
+            </div>
+            <div class="theory-body">
+                <p class="mb-4 text-sm text-slate-700">
+                    Calculamos formalmente \( P(X_B = k | X_A + X_B = n) \) usando la definición de condicional y cancelando términos.
+                </p>
+
+                <div class="math-block text-sm">
+                    $$ P(X_B=k | S=n) = \frac{ P(X_B=k \cap X_A=n-k) }{ P(S=n) } $$
+                    
+                    $$ = \frac{ \left( \frac{e^{-\lambda}\lambda^k}{k!} \right) \left( \frac{e^{-\lambda}\lambda^{n-k}}{(n-k)!} \right) }{ \frac{e^{-2\lambda}(2\lambda)^n}{n!} } $$
+
+                    $$ = \frac{ e^{-2\lambda} \lambda^n }{ k!(n-k)! } \cdot \frac{ n! }{ e^{-2\lambda} 2^n \lambda^n } $$
+                    
+                    <div class="text-center text-xs text-slate-400 my-2">-- Cancelamos \(e^{-2\lambda}\) y \(\lambda^n\) --</div>
+
+                    $$ = \frac{n!}{k!(n-k)!} \cdot \frac{1}{2^n} = \binom{n}{k} (0.5)^n $$
+                </div>
+
+                <div class="bg-slate-100 text-slate-700 p-4 rounded-lg text-sm font-bold text-center">
+                    Q.E.D. Es una Binomial(n, 0.5).
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-900 rounded-xl text-white p-8 shadow-2xl">
+            <div class="grid md:grid-cols-2 items-center gap-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-emerald-400 mb-2">Resultado Final</h2>
+                    <p class="text-slate-300 mb-4">Suma de las probabilidades de los dos escenarios.</p>
+                    <div class="text-3xl serif italic">
+                        (0.375 + 0.3125) · \(e^{-2.5}\)
+                    </div>
+                </div>
+                <div class="text-right">
+                     <div class="text-5xl font-bold text-white mb-2">0.056</div>
+                     <div class="text-sm text-slate-400">Probabilidad Aproximada</div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+
+
+<div>
+    <br>
+</div>
+
+    <title>Poisson: El Truco (Nivel Atómico)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
+        .serif { font-family: 'Lora', serif; }
+        
+        /* Cajas de detalle */
+        .calc-box { border: 1px dashed #cbd5e1; background-color: #fff; padding: 1rem; border-radius: 8px; margin-top: 0.5rem; }
+        .result-highlight { background-color: #f1f5f9; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 1rem; }
+        
+        /* Flechas de flujo */
+        .flow-arrow { display: flex; align-items: center; justify-content: center; height: 100%; color: #94a3b8; font-size: 1.5rem; }
+    </style>
+</head>
+<body class="py-10 px-4">
+
+    <div class="max-w-5xl mx-auto space-y-10">
+
+        <header class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-slate-900">Desglose "Atómico" del Método Binomial</h1>
+            <p class="text-slate-500">Resolución paso a paso con valores numéricos reales.</p>
+        </header>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">Datos de Entrada</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+                <div>
+                    <div class="text-xs text-slate-400 font-bold uppercase">Total (A+B)</div>
+                    <div class="text-xl font-mono font-bold">n = 3</div>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400 font-bold uppercase">Probabilidad (B)</div>
+                    <div class="text-xl font-mono font-bold">p = 0.5</div>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400 font-bold uppercase">Poisson (C)</div>
+                    <div class="text-xl font-mono font-bold">λ = 2.5</div>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400 font-bold uppercase">Factor K</div>
+                    <div class="text-xl font-mono font-bold text-emerald-600">\(e^{-2.5}\)</div>
+                </div>
+            </div>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-blue-500">
+            <div class="bg-blue-50 p-4 border-b border-blue-100 flex justify-between items-center">
+                <h3 class="font-bold text-blue-900">CASO 1: El colectivo cae en B</h3>
+                <span class="text-xs font-mono bg-white px-2 py-1 rounded text-blue-600 border border-blue-200">Obj: 1 colectivo total</span>
+            </div>
+            
+            <div class="p-6 grid md:grid-cols-12 gap-6">
+                
+                <div class="md:col-span-5 space-y-3">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Paso 1: Binomial (Pasado)</div>
+                    <p class="text-sm text-slate-600">Queremos <strong>1 éxito</strong> (en B) de <strong>3 intentos</strong>.</p>
+                    
+                    <div class="calc-box">
+                        <div class="text-xs text-slate-400 mb-1">Fórmula:</div>
+                        <div class="serif text-sm">
+                            \( P(B=1) = \binom{3}{1} \cdot 0.5^1 \cdot 0.5^2 \)
+                        </div>
+                        
+                        <div class="mt-3 pt-3 border-t border-dashed border-slate-200">
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>Combinatorio \(\binom{3}{1}\):</span>
+                                <span class="font-bold">3</span>
+                            </div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>Probabilidades \(0.5^3\):</span>
+                                <span class="font-bold">0.125</span>
+                            </div>
+                            <div class="flex justify-between text-sm font-bold text-blue-600 bg-blue-50 p-1 rounded mt-2">
+                                <span>Resultado Binomial:</span>
+                                <span>0.375</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 flow-arrow">
+                    <i class="fa-solid fa-xmark text-slate-300"></i>
+                </div>
+
+                <div class="md:col-span-5 space-y-3">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Paso 2: Poisson (Futuro)</div>
+                    <p class="text-sm text-slate-600">En C no debe caer <strong>ninguno</strong> (0).</p>
+                    
+                    <div class="calc-box">
+                        <div class="text-xs text-slate-400 mb-1">Fórmula:</div>
+                        <div class="serif text-sm">
+                            \( P(C=0) = \frac{e^{-2.5} \cdot 2.5^0}{0!} \)
+                        </div>
+                        
+                        <div class="mt-3 pt-3 border-t border-dashed border-slate-200">
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>Potencia \(2.5^0\):</span>
+                                <span class="font-bold">1</span>
+                            </div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>Factorial \(0!\):</span>
+                                <span class="font-bold">1</span>
+                            </div>
+                            <div class="flex justify-between text-sm font-bold text-emerald-600 bg-emerald-50 p-1 rounded mt-2">
+                                <span>Resultado Poisson:</span>
+                                <span>\(e^{-2.5}\)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 border-t border-slate-200 text-right">
+                <span class="text-xs font-bold text-slate-500 uppercase mr-4">Total Caso 1:</span>
+                <span class="text-xl font-serif font-bold text-slate-800">0.375 \(\cdot e^{-2.5}\)</span>
+            </div>
+        </section>
+
+
+        <section class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-amber-500">
+            <div class="bg-amber-50 p-4 border-b border-amber-100 flex justify-between items-center">
+                <h3 class="font-bold text-amber-900">CASO 2: El colectivo cae en C</h3>
+                <span class="text-xs font-mono bg-white px-2 py-1 rounded text-amber-600 border border-amber-200">Obj: 1 colectivo total</span>
+            </div>
+            
+            <div class="p-6 grid md:grid-cols-12 gap-6">
+                
+                <div class="md:col-span-5 space-y-3">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Paso 1: Binomial (Pasado)</div>
+                    <p class="text-sm text-slate-600">Queremos <strong>0 éxitos</strong> en B (todos se van a A).</p>
+                    
+                    <div class="calc-box">
+                        <div class="text-xs text-slate-400 mb-1">Fórmula:</div>
+                        <div class="serif text-sm">
+                            \( P(B=0) = \binom{3}{0} \cdot 0.5^0 \cdot 0.5^3 \)
+                        </div>
+                        
+                        <div class="mt-3 pt-3 border-t border-dashed border-slate-200">
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>Combinatorio \(\binom{3}{0}\):</span>
+                                <span class="font-bold">1</span>
+                            </div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>Probabilidades \(0.5^3\):</span>
+                                <span class="font-bold">0.125</span>
+                            </div>
+                            <div class="flex justify-between text-sm font-bold text-blue-600 bg-blue-50 p-1 rounded mt-2">
+                                <span>Resultado Binomial:</span>
+                                <span>0.125</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 flow-arrow">
+                    <i class="fa-solid fa-xmark text-slate-300"></i>
+                </div>
+
+                <div class="md:col-span-5 space-y-3">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Paso 2: Poisson (Futuro)</div>
+                    <p class="text-sm text-slate-600">En C debe caer <strong>exactamente 1</strong>.</p>
+                    
+                    <div class="calc-box">
+                        <div class="text-xs text-slate-400 mb-1">Fórmula:</div>
+                        <div class="serif text-sm">
+                            \( P(C=1) = \frac{e^{-2.5} \cdot 2.5^1}{1!} \)
+                        </div>
+                        
+                        <div class="mt-3 pt-3 border-t border-dashed border-slate-200">
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>Potencia \(2.5^1\):</span>
+                                <span class="font-bold">2.5</span>
+                            </div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>Factorial \(1!\):</span>
+                                <span class="font-bold">1</span>
+                            </div>
+                            <div class="flex justify-between text-sm font-bold text-emerald-600 bg-emerald-50 p-1 rounded mt-2">
+                                <span>Resultado Poisson:</span>
+                                <span>\(2.5 \cdot e^{-2.5}\)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 border-t border-slate-200 text-right">
+                <div class="inline-block text-right">
+                    <div class="text-xs text-slate-400 mb-1">Operación: \(0.125 \times 2.5\)</div>
+                    <div>
+                        <span class="text-xs font-bold text-slate-500 uppercase mr-4">Total Caso 2:</span>
+                        <span class="text-xl font-serif font-bold text-slate-800">0.3125 \(\cdot e^{-2.5}\)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-900 rounded-xl p-8 text-white shadow-xl text-center">
+            <h2 class="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-4">Suma Final de Probabilidades</h2>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 text-2xl font-serif italic">
+                <div class="bg-slate-800 px-4 py-2 rounded border border-slate-700">
+                    0.375
+                </div>
+                <i class="fa-solid fa-plus text-slate-500 text-sm"></i>
+                <div class="bg-slate-800 px-4 py-2 rounded border border-slate-700">
+                    0.3125
+                </div>
+                <div class="md:ml-4 flex items-center gap-2">
+                    <span>=</span>
+                    <span class="text-emerald-400 font-bold">0.6875</span>
+                    <span>\(\cdot e^{-2.5}\)</span>
+                </div>
+            </div>
+
+            <div class="mt-8 border-t border-slate-800 pt-4">
+                <p class="text-slate-400 text-sm">
+                    Valor numérico aproximado: \(0.6875 \times 0.08208 \approx\) <strong class="text-white">0.0564</strong>
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio del Dado - Probabilidad Condicional</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --primary: #dc2626; /* Rojo */
+            --secondary: #2563eb; /* Azul */
+            --neutral: #4b5563;
+            --accent: #fee2e2;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 { color: var(--neutral); text-align: center; }
+        .subtitle { text-align: center; color: #6b7280; margin-bottom: 2rem; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .step-number {
+            background: var(--neutral);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .math-block {
+            font-family: 'Courier New', monospace;
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--neutral);
+            margin: 15px 0;
+        }
+
+        .prob-bar-container {
+            display: flex;
+            height: 40px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            line-height: 40px;
+        }
+        
+        .bar-red { background: #ef4444; width: 50%; }
+        .bar-blue { background: #3b82f6; width: 30%; }
+        .bar-white { background: #d1d5db; width: 20%; color: #374151; }
+
+        .tree-node {
+            border: 2px solid #e5e7eb;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 8px;
+            text-align: center;
+            display: inline-block;
+            width: 100px;
+        }
+
+        .case-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .case-card {
+            border: 1px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .highlight {
+            background-color: #fef3c7;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .result-box {
+            text-align: center;
+            font-size: 1.5em;
+            color: #059669;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .fraction {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            margin: 0 5px;
+        }
+        .fraction > span { display: block; padding: 0 5px; }
+        .fraction span.bottom { border-top: 1px solid #000; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎲 Probabilidad Condicional en Tiros</h1>
+    <p class="subtitle">Ejercicio de Distribución Binomial Negativa (Pascal)</p>
+
+    <div class="card">
+        <h3><span class="step-number">1</span>Definición del Dado</h3>
+        <p>Un dado de 10 caras tiene las siguientes probabilidades:</p>
+        
+        <div class="prob-bar-container">
+            <div class="bar-red">Roja (0.5)</div>
+            <div class="bar-blue">Azul (0.3)</div>
+            <div class="bar-white">Blanca (0.2)</div>
+        </div>
+
+        <p><strong>Objetivo:</strong> Obtener 4 caras Rojas.<br>
+        <strong>Condición (C):</strong> Se lograron en 6 tiros o menos (X ≤ 6).<br>
+        <strong>Pregunta:</strong> Probabilidad de haber visto al menos una Azul.</p>
+        
+        <div class="math-block">
+            Estrategia: P(Al menos 1 Azul | C) = 1 - P(Ninguna Azul | C)
+        </div>
+        <p>Es mucho más fácil calcular el caso "Ninguna Azul" (donde solo salen Rojas o Blancas) y restarlo del total.</p>
+    </div>
+
+    <div class="card">
+        <h3><span class="step-number">2</span>Probabilidad Total (Denominador)</h3>
+        <p>Calculamos la probabilidad de obtener la 4ta Roja en el tiro 4, 5 o 6.</p>
+        <p><em>Usamos la Binomial Negativa: El último tiro SIEMPRE es Rojo. Los anteriores (k-1) tienen 3 Rojas.</em></p>
+
+        <div class="case-breakdown">
+            <div class="case-card">
+                <h4>Caso X = 4</h4>
+                <p>Secuencia: <strong>R R R R</strong></p>
+                <p>Comb(3,3) × 0.5⁴ = 0.0625</p>
+            </div>
+            <div class="case-card">
+                <h4>Caso X = 5</h4>
+                <p>3 Rojas en los primeros 4, luego Roja.</p>
+                <p>Comb(4,3) × 0.5⁴ × 0.5¹ = 0.1250</p>
+            </div>
+            <div class="case-card">
+                <h4>Caso X = 6</h4>
+                <p>3 Rojas en los primeros 5, luego Roja.</p>
+                <p>Comb(5,3) × 0.5⁴ × 0.5² = 0.15625</p>
+            </div>
+        </div>
+        
+        <div class="math-block" style="text-align: center;">
+            <strong>P(Condición) Total = 0.0625 + 0.1250 + 0.15625 = <span style="color:blue">0.34375</span></strong>
+        </div>
+    </div>
+
+    <div class="card" style="border-left: 5px solid #ef4444;">
+        <h3><span class="step-number">3</span>Probabilidad "Sin Azules" (Numerador)</h3>
+        <p>Ahora calculamos lo mismo, pero asumiendo que <strong>NO salieron azules</strong>.</p>
+        <p>Esto significa que todos los "Fallos" (lo que no es Rojo) tuvieron que ser obligatoriamente <strong>Blancos</strong> (Probabilidad 0.2).</p>
+
+        <div class="case-breakdown">
+            <div class="case-card">
+                <h4>Caso X = 4 (Sin Azules)</h4>
+                <p>Solo Rojas. No hay lugar para fallos.</p>
+                <p>Comb(3,3) × 0.5⁴ × (0.2)⁰ = <strong>0.0625</strong></p>
+                <small>(Igual que antes, pues no hubo fallos)</small>
+            </div>
+            <div class="case-card">
+                <h4>Caso X = 5 (Sin Azules)</h4>
+                <p>1 fallo, debe ser Blanco.</p>
+                <p>Comb(4,3) × 0.5⁴ × (0.2)¹</p>
+                <p>= 4 × 0.0625 × 0.2 = <strong>0.0500</strong></p>
+            </div>
+            <div class="case-card">
+                <h4>Caso X = 6 (Sin Azules)</h4>
+                <p>2 fallos, ambos Blancos.</p>
+                <p>Comb(5,3) × 0.5⁴ × (0.2)²</p>
+                <p>= 10 × 0.0625 × 0.04 = <strong>0.0250</strong></p>
+            </div>
+        </div>
+
+        <div class="math-block" style="text-align: center;">
+            <strong>P(Sin Azules ∩ Condición) = 0.0625 + 0.05 + 0.025 = <span style="color:red">0.1375</span></strong>
+        </div>
+    </div>
+
+    <div class="card" style="border: 2px solid #10b981;">
+        <h3><span class="step-number">4</span>Resultado Final (Bayes)</h3>
+        
+        <p>Primero, la probabilidad condicional de NO haber visto azules:</p>
+        <div class="math-block" style="font-size: 1.2em; text-align: center;">
+            P(No Azul | C) = 
+            <div class="fraction">
+                <span>P(No Azul ∩ C)</span>
+                <span class="bottom">P(C)</span>
+            </div>
+            = 
+            <div class="fraction">
+                <span>0.13750</span>
+                <span class="bottom">0.34375</span>
+            </div>
+            = <strong>0.4</strong>
+        </div>
+
+        <p>Finalmente, usamos el complemento para responder la pregunta ("Al menos una azul"):</p>
+        
+        <div class="result-box">
+            P(Al menos 1 Azul) = 1 - 0.4 = <span style="font-size: 1.5em;">0.6</span>
+        </div>
+        <p style="text-align: center; color: #666;">(O sea, un 60%)</p>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Completo: Medias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+        .sock-step { position: relative; padding-left: 2rem; border-left: 2px solid #e2e8f0; padding-bottom: 1.5rem; }
+        .sock-step:last-child { border-left: none; padding-bottom: 0; }
+        .sock-step::before {
+            content: ''; position: absolute; left: -9px; top: 0;
+            width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 4px solid #cbd5e1;
+        }
+        .sock-step.active::before { border-color: #3b82f6; background: #3b82f6; }
+        .sock-step.success::before { border-color: #10b981; background: #10b981; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen py-8 px-4">
+
+    <div class="max-w-4xl mx-auto space-y-8">
+        
+        <div class="bg-slate-900 rounded-2xl shadow-xl overflow-hidden text-white p-8 border-b-4 border-pink-500 relative">
+            <div class="absolute top-0 right-0 p-6 opacity-5">
+                <i class="fa-solid fa-socks text-9xl"></i>
+            </div>
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Probabilidad</span>
+                    <span class="bg-slate-700 text-slate-200 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Extracción Sin Reposición</span>
+                </div>
+                <h1 class="text-3xl font-bold">Ejercicio de las Medias: Análisis Total</h1>
+                <p class="text-slate-400 mt-2 text-lg">Teoría del método + Desarrollo de los 3 casos posibles.</p>
+            </div>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 bg-amber-50">
+                <h2 class="text-xl font-bold text-amber-900 flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                    ¿Por qué usamos el Método de las Multiplicaciones?
+                </h2>
+                <p class="text-amber-800 text-sm mt-1">No usamos combinatoria simple porque el problema es dinámico.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                <div class="p-6">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Razón 1</div>
+                    <h3 class="font-bold text-slate-800 mb-2">Es Secuencial</h3>
+                    <p class="text-sm text-slate-600">
+                        Ocurre en el tiempo ($t_1, t_2...$). Queremos que pase A, <strong>y luego</strong> B.
+                        En probabilidad, "Y luego" significa multiplicar intersecciones.
+                    </p>
+                </div>
+                <div class="p-6 bg-slate-50/50">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Razón 2</div>
+                    <h3 class="font-bold text-slate-800 mb-2">El Universo Cambia</h3>
+                    <p class="text-sm text-slate-600">
+                        Al ser "sin reposición", el denominador se reduce en cada paso ($N=6 \to 5 \to 4$).
+                        La multiplicación maneja esto naturalmente.
+                    </p>
+                </div>
+                <div class="p-6">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Razón 3</div>
+                    <h3 class="font-bold text-slate-800 mb-2">Es un Bucle "While"</h3>
+                    <p class="text-sm text-slate-600">
+                        No hay un número fijo de extracciones. Calculamos rama por rama hasta que se cumple la condición <code>if (par) break;</code>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="space-y-6">
+            <h2 class="text-2xl font-bold text-slate-800 pl-2 border-l-4 border-indigo-500">Desarrollo de los 3 Casos Posibles</h2>
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-slate-200 hover:shadow-lg transition-shadow">
+                <div class="bg-emerald-50 p-4 border-b border-emerald-100 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-emerald-900 text-lg">Caso 1: Éxito Inmediato (X=2)</h3>
+                        <p class="text-xs text-emerald-700">Sacas una, y la siguiente es su pareja.</p>
+                    </div>
+                    <div class="text-2xl font-bold text-emerald-600 code-font">P = 0.20</div>
+                </div>
+                <div class="p-6 grid md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-1">
+                        <div class="sock-step active">
+                            <span class="font-bold text-slate-700">Extracción 1</span>
+                            <div class="text-xs text-slate-500">Sacas cualquier media (Prob: 1)</div>
+                        </div>
+                        <div class="sock-step success">
+                            <span class="font-bold text-slate-700">Extracción 2</span>
+                            <div class="text-xs text-slate-500">Sacas la pareja de la anterior.</div>
+                            <div class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded inline-block mt-1 font-bold">MATCH!</div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <div class="text-xs font-bold text-slate-400 uppercase mb-2">Lógica Matemática</div>
+                        <div class="flex justify-between items-center mb-2 text-sm">
+                            <span>Quedan 5 medias, solo 1 me sirve:</span>
+                            <span class="font-bold text-slate-800">1/5</span>
+                        </div>
+                        <div class="border-t border-slate-200 pt-2 mt-2">
+                            <code class="code-font text-emerald-600 font-bold block text-center text-lg">P(X=2) = 1/5</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-slate-200 hover:shadow-lg transition-shadow">
+                <div class="bg-blue-50 p-4 border-b border-blue-100 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-blue-900 text-lg">Caso 2: Tercera la vencida (X=3)</h3>
+                        <p class="text-xs text-blue-700">Sacas A, sacas B (distinta), la tercera hace par con A o B.</p>
+                    </div>
+                    <div class="text-2xl font-bold text-blue-600 code-font">P = 0.40</div>
+                </div>
+                <div class="p-6 grid md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-1">
+                        <div class="sock-step active">
+                            <span class="font-bold text-slate-700">Extracción 1</span>
+                            <div class="text-xs text-slate-500">Cualquiera (Prob: 1)</div>
+                        </div>
+                        <div class="sock-step active">
+                            <span class="font-bold text-slate-700">Extracción 2</span>
+                            <div class="text-xs text-slate-500">Color diferente (4 disponibles de 5)</div>
+                        </div>
+                        <div class="sock-step success">
+                            <span class="font-bold text-slate-700">Extracción 3</span>
+                            <div class="text-xs text-slate-500">Match con la 1ª o la 2ª.</div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <div class="text-xs font-bold text-slate-400 uppercase mb-2">Lógica Matemática</div>
+                        <div class="flex justify-between items-center mb-1 text-sm">
+                            <span>Paso 2 (Distinta):</span>
+                            <span class="font-bold code-font">4/5</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-1 text-sm">
+                            <span>Paso 3 (Match):</span>
+                            <span class="font-bold code-font">2/4</span>
+                        </div>
+                        <div class="border-t border-slate-200 pt-2 mt-2 text-center">
+                            <code class="code-font text-blue-600 font-bold text-lg">P(X=3) = 1 · 4/5 · 2/4</code>
+                            <div class="text-xs text-slate-400 mt-1">= 8/20 = 2/5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-slate-200 hover:shadow-lg transition-shadow">
+                <div class="bg-indigo-50 p-4 border-b border-indigo-100 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-indigo-900 text-lg">Caso 3: Peor Caso / Palomar (X=4)</h3>
+                        <p class="text-xs text-indigo-700">Sacas 3 distintas. La 4ª OBLIGATORIAMENTE hace par.</p>
+                    </div>
+                    <div class="text-2xl font-bold text-indigo-600 code-font">P = 0.40</div>
+                </div>
+                <div class="p-6 grid md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-1">
+                        <div class="sock-step active">
+                            <span class="font-bold text-slate-700">Extracción 1</span>
+                        </div>
+                        <div class="sock-step active">
+                            <span class="font-bold text-slate-700">Extracción 2</span>
+                            <div class="text-xs text-slate-500">Diferente (4/5)</div>
+                        </div>
+                        <div class="sock-step active">
+                            <span class="font-bold text-slate-700">Extracción 3</span>
+                            <div class="text-xs text-slate-500">Diferente de nuevo (2/4)</div>
+                        </div>
+                        <div class="sock-step success">
+                            <span class="font-bold text-slate-700">Extracción 4</span>
+                            <div class="text-xs text-slate-500">Evento Seguro (Prob: 1)</div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <div class="text-xs font-bold text-slate-400 uppercase mb-2">Lógica Matemática</div>
+                        <div class="flex justify-between items-center mb-1 text-sm">
+                            <span>Paso 2 (Distinta):</span>
+                            <span class="font-bold code-font">4/5</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-1 text-sm">
+                            <span>Paso 3 (Último color):</span>
+                            <span class="font-bold code-font">2/4</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-1 text-sm">
+                            <span>Paso 4 (Seguro):</span>
+                            <span class="font-bold code-font">1</span>
+                        </div>
+                        <div class="border-t border-slate-200 pt-2 mt-2 text-center">
+                            <code class="code-font text-indigo-600 font-bold text-lg">P(X=4) = 1 · 4/5 · 2/4 · 1</code>
+                            <div class="text-xs text-slate-400 mt-1">= 8/20 = 2/5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bg-slate-800 text-slate-300 rounded-xl p-6 text-center border-t-4 border-green-500">
+            <h4 class="uppercase text-xs font-bold tracking-widest mb-2">Verificación Final</h4>
+            <div class="flex justify-center items-center gap-4 font-mono text-xl text-white">
+                <span>0.20</span>
+                <span>+</span>
+                <span>0.40</span>
+                <span>+</span>
+                <span>0.40</span>
+                <span>=</span>
+                <span class="text-green-400 font-bold">1.0</span>
+            </div>
+            <p class="text-xs mt-2 text-slate-500">Suma correcta. El modelo de probabilidad es consistente.</p>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inferencia Estadística: Semillas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.0"></script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .serif { font-family: 'Lora', serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Tarjetas */
+        .card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); overflow: hidden; margin-bottom: 2rem; }
+        .card-header { padding: 1.5rem; background-color: #f1f5f9; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.75rem; }
+        .card-body { padding: 2rem; }
+
+        /* Highlight Boxes */
+        .concept-box { border-left: 4px solid; padding: 1.5rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body class="py-10 px-4">
+
+    <div class="max-w-5xl mx-auto">
+
+        <header class="text-center mb-12">
+            <div class="inline-block bg-emerald-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
+                Ejercicio 4
+            </div>
+            <h1 class="text-4xl font-bold text-slate-900 mb-4">Estimación de Tiempos de Germinación</h1>
+            <p class="text-slate-500 max-w-2xl mx-auto">
+                Inferencia Estadística: Del dato crudo al modelo predictivo.
+            </p>
+        </header>
+
+        <section>
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold">1</div>
+                <h2 class="text-2xl font-bold text-slate-800">Marco Teórico: La Lógica del Ingeniero</h2>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    
+                    <div class="concept-box bg-blue-50 border-blue-500">
+                        <h3 class="text-lg font-bold text-blue-900 mb-2">
+                            <i class="fa-solid fa-calculator mr-2"></i>
+                            ¿Por qué "solo hacemos una integral"?
+                        </h3>
+                        <p class="text-slate-700 leading-relaxed mb-3">
+                            En probabilidad continua, la función \(f(x)\) es la <strong>densidad</strong> (como la velocidad instantánea), no la probabilidad directa.
+                        </p>
+                        <p class="text-slate-700 italic border-l-2 border-blue-300 pl-4">
+                            "Por eso, siempre que te pidan 'Probabilidad de que X sea menor a...' o 'entre A y B', te están gritando: 
+                            <strong class="text-blue-700 not-italic">¡Calcula el área bajo la curva en ese tramo!</strong>"
+                        </p>
+                        <div class="mt-3 text-sm font-bold text-blue-800">
+                            Área = Integral Definida
+                        </div>
+                    </div>
+
+                    <div class="concept-box bg-indigo-50 border-indigo-500">
+                        <h3 class="text-lg font-bold text-indigo-900 mb-2">
+                            <i class="fa-solid fa-crystal-ball mr-2"></i>
+                            ¿Qué es la "Probabilidad Estimada"?
+                        </h3>
+                        <p class="text-slate-700 mb-4">Es un proceso de tres pasos:</p>
+                        
+                        <div class="grid md:grid-cols-3 gap-4 text-center text-sm">
+                            <div class="bg-white p-4 rounded border border-indigo-100 shadow-sm">
+                                <div class="text-indigo-400 font-bold uppercase text-xs mb-2">Paso 1: Pasado</div>
+                                <div class="text-slate-600">Tienes 10 datos "sueltos" y ruidosos (tu lista de números).</div>
+                            </div>
+                            <div class="bg-indigo-600 text-white p-4 rounded shadow-lg transform scale-105 z-10">
+                                <div class="font-bold uppercase text-xs mb-2 text-indigo-200">Paso 2: Modelo</div>
+                                <div>Construyes una fórmula matemática "perfecta" usando esos datos (\(\theta = 2.1\)).</div>
+                            </div>
+                            <div class="bg-white p-4 rounded border border-indigo-100 shadow-sm">
+                                <div class="text-indigo-400 font-bold uppercase text-xs mb-2">Paso 3: Futuro</div>
+                                <div class="text-slate-600">Olvidas los datos viejos. Usas tu nueva fórmula para predecir cualquier semilla nueva.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="concept-box bg-amber-50 border-amber-500 mb-0">
+                        <h3 class="text-lg font-bold text-amber-900 mb-2">
+                            <i class="fa-solid fa-ruler-combined mr-2"></i>
+                            ¿Por qué elegimos el dato más chico?
+                        </h3>
+                        <p class="text-slate-700 leading-relaxed">
+                            La función tiene una condición: \(1_{\{x > \theta\}}\). Esto es un "muro". Nada puede existir antes de \(\theta\).
+                            Si dijéramos que el muro está en 2.5, el dato real "2.1" sería imposible. 
+                            El muro debe estar pegado al primer dato que vimos.
+                        </p>
+                        <div class="mt-2 font-mono bg-white inline-block px-2 py-1 rounded border border-amber-200 text-amber-800 font-bold">
+                            \(\hat{\theta} = \min(x_i) = 2.1\)
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold">2</div>
+                <h2 class="text-2xl font-bold text-slate-800">Resolución Mecánica</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <div class="space-y-6">
+                    
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="font-bold text-slate-700 mb-3 border-b pb-2">A. Hallar el Estimador</h3>
+                        <div class="text-sm text-slate-500 mb-2">Datos ordenados mentalmente:</div>
+                        <div class="mono text-xs bg-slate-100 p-2 rounded mb-3 text-slate-600">
+                            [<span class="text-red-600 font-bold">2.1</span>, 2.5, 2.9, 3.0, 3.1, 3.3, 4.0, 4.1, 4.8, 5.2]
+                        </div>
+                        <p class="text-sm text-slate-700">
+                            Por Máxima Verosimilitud en distribución desplazada:
+                            <br>
+                            <span class="serif text-xl">\(\hat{\theta} = 2.1\)</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <h3 class="font-bold text-slate-700 mb-3 border-b pb-2">B. Plantear la Integral</h3>
+                        <p class="text-sm text-slate-600 mb-2">
+                            Queremos \(P(X < 4)\). Integramos la densidad desde el inicio del muro (2.1) hasta 4.
+                        </p>
+                        <div class="bg-slate-50 p-4 rounded text-center serif text-lg my-2">
+                            \( \int_{2.1}^{4} \frac{2.1}{x^2} dx \)
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border-l-4 border-emerald-500 shadow-md">
+                        <h3 class="font-bold text-emerald-800 mb-3">C. Resultado Final</h3>
+                        <div class="space-y-2 serif text-slate-700">
+                            <div>1. Sacamos constante: \( 2.1 \int x^{-2} dx \)</div>
+                            <div>2. Primitiva: \( 2.1 \left[ \frac{-1}{x} \right]_{2.1}^{4} \)</div>
+                            <div>3. Barrow: \( 2.1 \left( \frac{-1}{4} - \frac{-1}{2.1} \right) \)</div>
+                            <div>4. Distributiva: \( \frac{-2.1}{4} + \frac{2.1}{2.1} \)</div>
+                            <div>5. Final: \( -0.525 + 1 \)</div>
+                        </div>
+                        <div class="mt-4 text-center text-3xl font-bold text-emerald-600">
+                            = 0.475
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-lg flex flex-col">
+                    <div class="mb-4 px-2">
+                        <h3 class="font-bold text-slate-800">Visualización del Área</h3>
+                        <p class="text-xs text-slate-500">Área sombreada = Probabilidad (47.5%)</p>
+                    </div>
+                    <div class="flex-grow relative w-full h-80">
+                        <canvas id="germinationChart"></canvas>
+                    </div>
+                    <div class="mt-4 grid grid-cols-3 gap-2 text-[10px] text-center uppercase font-bold text-slate-400">
+                        <div>
+                            <span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-1"></span>Datos
+                        </div>
+                        <div>
+                            <span class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-1"></span>Modelo
+                        </div>
+                        <div>
+                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-300 mr-1"></span>Área
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const ctx = document.getElementById('germinationChart').getContext('2d');
+        
+        // Datos del problema
+        const rawData = [3.0, 2.1, 2.5, 4.0, 2.9, 4.8, 3.1, 3.3, 4.1, 5.2];
+        const theta = 2.1;
+        const target = 4.0;
+
+        // Generar puntos de la curva
+        const labels = [];
+        const curveData = [];
+        const steps = 100;
+        const maxX = 6.0;
+
+        for (let i = 0; i <= steps; i++) {
+            let x = 1.5 + (i / steps) * (maxX - 1.5);
+            labels.push(x.toFixed(2));
+            
+            // Función f(x) = theta / x^2
+            if (x < theta) {
+                curveData.push(null);
+            } else {
+                curveData.push(theta / (x * x));
+            }
+        }
+
+        // Datos Scatter (puntos en el suelo)
+        const scatterData = rawData.map(val => ({x: val, y: 0}));
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Modelo (Densidad)',
+                        data: curveData,
+                        borderColor: '#2563eb', // Blue 600
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.4,
+                        fill: {
+                            target: 'origin',
+                            above: (context) => {
+                                const chart = context.chart;
+                                const {ctx, chartArea, scales} = chart;
+                                if (!chartArea) return null;
+                                return getGradient(ctx, chartArea, scales);
+                            }
+                        }
+                    },
+                    {
+                        label: 'Datos Muestra',
+                        data: scatterData,
+                        type: 'scatter',
+                        backgroundColor: '#dc2626', // Red 600
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        min: 1.5,
+                        max: 6.0,
+                        title: { display: true, text: 'Días' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Densidad f(x)' }
+                    }
+                },
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            lineTheta: {
+                                type: 'line',
+                                xMin: theta,
+                                xMax: theta,
+                                borderColor: 'black',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                label: {
+                                    content: 'θ = 2.1',
+                                    enabled: true,
+                                    position: 'top'
+                                }
+                            },
+                            lineTarget: {
+                                type: 'line',
+                                xMin: target,
+                                xMax: target,
+                                borderColor: '#059669', // Emerald 600
+                                borderWidth: 2,
+                                borderDash: [2, 2],
+                                label: {
+                                    content: 'Meta < 4',
+                                    enabled: true,
+                                    position: 'center',
+                                    color: '#059669'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gradiente para sombrear SOLO entre 2.1 y 4.0
+        function getGradient(ctx, chartArea, scales) {
+            const gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
+            const x = scales.x;
+            
+            // Posiciones en pixeles
+            const startPix = x.getPixelForValue(2.1);
+            const endPix = x.getPixelForValue(4.0);
+            const totalW = chartArea.right - chartArea.left;
+
+            // Convertir a porcentajes (0 a 1)
+            const pStart = (startPix - chartArea.left) / totalW;
+            const pEnd = (endPix - chartArea.left) / totalW;
+
+            // Definir colores: Transparente -> Color -> Transparente
+            gradient.addColorStop(0, 'rgba(0,0,0,0)');
+            gradient.addColorStop(Math.max(0, pStart - 0.01), 'rgba(0,0,0,0)');
+            gradient.addColorStop(pStart, 'rgba(52, 211, 153, 0.5)'); // Emerald 400
+            gradient.addColorStop(pEnd, 'rgba(52, 211, 153, 0.5)');
+            gradient.addColorStop(Math.min(1, pEnd + 0.01), 'rgba(0,0,0,0)');
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+
+            return gradient;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procesos Estocásticos: Llamadas de Hospital</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #0891b2; /* Cyan */
+            --secondary: #f59e0b; /* Amber */
+            --accent: #8b5cf6; /* Violet */
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 { color: var(--primary); text-align: center; margin-bottom: 0.5rem; }
+        .subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 2rem; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        .step-title { font-size: 1.25rem; font-weight: 600; }
+
+        .math-block {
+            font-family: 'Courier New', monospace;
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        /* Grid for Call Types */
+        .call-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .call-card {
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .call-urgencia { border-top: 4px solid #ef4444; background: #fef2f2; }
+        .call-turno { border-top: 4px solid #3b82f6; background: #eff6ff; }
+        .call-otros { border-top: 4px solid #10b981; background: #ecfdf5; }
+
+        .call-weight {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .call-contribution {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        /* SVG Styles */
+        svg { max-width: 100%; height: auto; }
+        .bar-label { font-size: 12px; fill: #475569; font-weight: 600; }
+        .bar-value { font-size: 14px; fill: white; font-weight: bold; }
+        
+        .final-result {
+            background: #ecfeff;
+            border: 2px solid #0891b2;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .final-number {
+            font-size: 2.5rem;
+            color: #0891b2;
+            font-weight: 800;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⏱️ Tiempo Total de Llamadas</h1>
+    <p class="subtitle">Identidad de Wald en Procesos de Poisson Compuestos</p>
+
+    <div class="card">
+        <div class="step-header">
+            <div class="step-number">1</div>
+            <div class="step-title">Cantidad Esperada (E[N])</div>
+        </div>
+        <p>Primero calculamos cuántas llamadas entran en 1 hora (60 minutos).</p>
+        
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+            <div style="text-align: center;">
+                <div style="font-size: 2rem;">📞</div>
+                <div><strong>2</strong> llamadas/min</div>
+            </div>
+            <div style="font-size: 1.5rem; color: #cbd5e1;">×</div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem;">⏳</div>
+                <div><strong>60</strong> minutos</div>
+            </div>
+            <div style="font-size: 1.5rem; color: #cbd5e1;">=</div>
+            <div style="text-align: center; color: var(--primary);">
+                <div style="font-size: 2rem; font-weight: bold;">120</div>
+                <div>Llamadas Totales</div>
+            </div>
+        </div>
+
+        <div class="math-block">
+            E[N] = λ × t = 2 × 60 = 120
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="step-header">
+            <div class="step-number">2</div>
+            <div class="step-title">Duración Promedio Unitaria (E[D])</div>
+        </div>
+        <p>No todas las llamadas duran lo mismo. Calculamos el promedio ponderado.</p>
+
+        <div class="call-types-grid">
+            <div class="call-card call-urgencia">
+                <h3>🚑 Urgencia</h3>
+                <div>Prob: <strong>0.2</strong></div>
+                <div>Duración: <strong>0.625</strong> min</div>
+                <div class="call-weight">(5/8 min)</div>
+                <div class="call-contribution" style="color: #ef4444;">Aporta: 0.125</div>
+            </div>
+            <div class="call-card call-turno">
+                <h3>📅 Turno</h3>
+                <div>Prob: <strong>0.6</strong></div>
+                <div>Duración: <strong>4</strong> min</div>
+                <div class="call-weight">(El más frecuente)</div>
+                <div class="call-contribution" style="color: #3b82f6;">Aporta: 2.400</div>
+            </div>
+            <div class="call-card call-otros">
+                <h3>❓ Otros</h3>
+                <div>Prob: <strong>0.2</strong></div>
+                <div>Duración: <strong>2</strong> min</div>
+                <div class="call-weight">-</div>
+                <div class="call-contribution" style="color: #10b981;">Aporta: 0.400</div>
+            </div>
+        </div>
+
+        <p><strong>Visualización del Aporte al Promedio:</strong><br>
+        <small>Observa cómo la barra azul (Turnos) domina el promedio total.</small></p>
+        
+        <svg viewBox="0 0 600 100" style="background: #f8fafc; border-radius: 8px;">
+            <rect x="50" y="30" width="500" height="40" fill="#e2e8f0" rx="4" />
+            
+            <rect x="50" y="30" width="21" height="40" fill="#ef4444" />
+            
+            <rect x="71" y="30" width="410" height="40" fill="#3b82f6" />
+            
+            <rect x="481" y="30" width="69" height="40" fill="#10b981" />
+            
+            <text x="50" y="20" class="bar-label" fill="#ef4444">Urg.</text>
+            <text x="250" y="20" class="bar-label" fill="#3b82f6">Turnos (La gran mayoría del tiempo)</text>
+            <text x="500" y="20" class="bar-label" fill="#10b981">Otros</text>
+            
+            <text x="275" y="55" class="bar-value">2.4 min</text>
+        </svg>
+
+        <div class="math-block">
+            E[D] = (0.2 × 0.625) + (0.6 × 4) + (0.2 × 2)<br>
+            E[D] = 0.125 + 2.4 + 0.4<br>
+            <strong>E[D] = 2.925 minutos</strong>
+        </div>
+    </div>
+
+    <div class="card final-result">
+        <div class="step-header" style="justify-content: center;">
+            <div class="step-number">3</div>
+            <div class="step-title">Resultado Final (Identidad de Wald)</div>
+        </div>
+        
+        <p>Multiplicamos la cantidad esperada de llamadas por la duración promedio.</p>
+        
+        <div class="math-block" style="background: white; border-color: var(--primary);">
+            E[Total] = E[N] × E[D]<br>
+            E[Total] = 120 llamadas × 2.925 min/llamada
+        </div>
+
+        <div class="final-number">351 minutos</div>
+        <p style="color: var(--text-secondary); margin-top: 10px;">(Equivalente a 5 horas y 51 minutos de trabajo continuo)</p>
+    </div>
+
+</div>
+
+</body>
+</html>
