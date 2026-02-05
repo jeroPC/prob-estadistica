@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo Gráfico: Pablo vs Ana</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 0; }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .text-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .visual-content {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 5px solid #ccc;
+        }
+
+        .card.pablo { border-left-color: #3498db; }
+        .card.ana { border-left-color: #e74c3c; }
+
+        .highlight { font-weight: bold; color: #2c3e50; }
+
+        /* Estilos del Gráfico SVG */
+        svg {
+            max-width: 100%;
+            height: auto;
+            font-size: 12px;
+            font-family: monospace;
+        }
+        .axis { stroke: #333; stroke-width: 2; }
+        .grid { stroke: #eee; stroke-width: 1; stroke-dasharray: 4; }
+        .shape-pablo { fill: rgba(52, 152, 219, 0.3); stroke: #3498db; stroke-width: 2; }
+        .shape-ana { fill: rgba(231, 76, 60, 0.3); stroke: #e74c3c; stroke-width: 2; }
+        .label { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>3. Cálculo de Áreas (Gráficamente)</h1>
+
+    <div class="container">
+        
+        <div class="text-content">
+            <p>Imaginamos el rectángulo del espacio muestral:</p>
+            <ul>
+                <li><strong>Eje X (Pablo):</strong> Intervalo [10, 13] (Ancho = 3)</li>
+                <li><strong>Eje Y (Ana):</strong> Intervalo [11, 15] (Alto = 4)</li>
+                <li><strong>Área Total:</strong> 12 u²</li>
+            </ul>
+
+            <div class="card pablo">
+                <h2>A. Área del Caso 1: \(A > P + 1\)</h2>
+                <p><em>(Favorables para Pablo: Región Azul)</em></p>
+                <p>Esta es la región donde Ana tarda más que Pablo + 1 segundo.</p>
+                <p>Trazamos la línea \(A = P + 1\):</p>
+                <ul>
+                    <li>Si \(P=10 \rightarrow A=11\) (Esquina inferior izquierda).</li>
+                    <li>Si \(P=13 \rightarrow A=14\) (Borde derecho, antes del tope).</li>
+                </ul>
+                <p>La región por encima de esta línea forma un <strong>Trapecio</strong>:</p>
+                <ul>
+                    <li>Altura lado izquierdo (\(P=10\)): De 11 a 15 \(\rightarrow\) <strong>4 u</strong>.</li>
+                    <li>Altura lado derecho (\(P=13\)): De 14 a 15 \(\rightarrow\) <strong>1 u</strong>.</li>
+                    <li>Ancho (\(P\) de 10 a 13) \(\rightarrow\) <strong>3 u</strong>.</li>
+                </ul>
+                $$Area_{Pablo} = \frac{4 + 1}{2} \times 3 = 2.5 \times 3 = \mathbf{7.5}$$
+            </div>
+
+            <div class="card ana">
+                <h2>B. Área del Caso 2: \(A < P - 1\)</h2>
+                <p><em>(Gana Ana por mucho: Región Roja)</em></p>
+                <p>Esta es la región donde Ana es tan rápida que su tiempo es menor a Pablo - 1.</p>
+                <p>Trazamos la línea \(A = P - 1\):</p>
+                <ul>
+                    <li>Intersección piso (\(A=11\)): \(11 = P - 1 \rightarrow P = 12\).</li>
+                    <li>Intersección borde derecho (\(P=13\)): \(A = 13 - 1 \rightarrow A = 12\).</li>
+                </ul>
+                <p>Esto forma un pequeño <strong>Triángulo</strong>:</p>
+                <ul>
+                    <li>Base: De \(P=12\) a \(13\) \(\rightarrow\) <strong>1 u</strong>.</li>
+                    <li>Altura: De \(A=11\) a \(12\) \(\rightarrow\) <strong>1 u</strong>.</li>
+                </ul>
+                $$Area_{Ana} = \frac{1 \times 1}{2} = \mathbf{0.5}$$
+            </div>
+        </div>
+
+        <div class="visual-content">
+            <h3>Visualización del Espacio Muestral</h3>
+            <svg width="400" height="400" viewBox="-40 -40 380 450">
+                <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+                        <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+                    </marker>
+                </defs>
+
+                <line x1="0" y1="350" x2="320" y2="350" class="axis" marker-end="url(#arrow)" />
+                <line x1="0" y1="350" x2="0" y2="0" class="axis" marker-end="url(#arrow)" />
+                <text x="320" y="370" text-anchor="end">Pablo (seg)</text>
+                <text x="10" y="0" text-anchor="start">Ana (seg)</text>
+
+                <rect x="0" y="30" width="300" height="320" fill="none" stroke="#999" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="-30" y="355">11</text>
+                <text x="-30" y="30">15</text>
+                <text x="0" y="370">10</text>
+                <text x="300" y="370">13</text>
+
+                <polygon points="0,350 300,110 300,30 0,30" class="shape-pablo" />
+                <text x="50" y="100" fill="#2980b9" font-weight="bold">Área Pablo (7.5)</text>
+                <text x="120" y="240" fill="#2980b9" font-size="10" transform="rotate(-38 150 230)">Línea A = P + 1</text>
+
+                <polygon points="200,350 300,270 300,350" class="shape-ana" />
+                <text x="240" y="330" fill="#c0392b" font-weight="bold">Ana (0.5)</text>
+                <text x="210" y="300" fill="#c0392b" font-size="10" transform="rotate(-38 250 310)">Línea A = P - 1</text>
+                
+                <text x="100" y="300" fill="#7f8c8d" font-size="10">Diferencia < 1s</text>
+
+            </svg>
+            <p style="text-align: center; font-size: 0.9em; color: #666;">
+                El gráfico muestra el espacio muestral completo.<br>
+                Eje X: Tiempo de Pablo (10 a 13)<br>
+                Eje Y: Tiempo de Ana (11 a 15)
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>

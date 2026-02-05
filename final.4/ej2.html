@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolución Completa: Pablo vs Ana</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        h3 { color: #16a085; margin-top: 20px; }
+        
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .step-badge {
+            background-color: #2c3e50;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .result-box {
+            background-color: #e8f4f8;
+            border-left: 5px solid #3498db;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Estilos para el gráfico SVG */
+        .svg-container {
+            text-align: center;
+            margin: 20px 0;
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        svg { max-width: 100%; height: auto; font-family: monospace; }
+        .shape-pablo { fill: rgba(52, 152, 219, 0.2); stroke: #3498db; stroke-width: 2; }
+        .shape-ana { fill: rgba(231, 76, 60, 0.2); stroke: #e74c3c; stroke-width: 2; }
+    </style>
+</head>
+<body>
+
+    <h1>Resolución: Probabilidad Geométrica (Pablo vs Ana)</h1>
+    
+    <div class="card">
+        <h3>El Problema</h3>
+        <p>Pablo y Ana corren 100 metros. Sus tiempos son variables aleatorias uniformes e independientes:</p>
+        <ul>
+            <li><strong>Pablo (P):</strong> Uniforme en \([10, 13]\).</li>
+            <li><strong>Ana (A):</strong> Uniforme en \([11, 15]\).</li>
+        </ul>
+        <p><strong>Condición:</strong> Entre las llegadas de ambos pasó más de 1 segundo (\(|P - A| > 1\)).</p>
+        <p><strong>Pregunta:</strong> Calcular la probabilidad de que haya ganado Pablo (\(P < A\)).</p>
+    </div>
+
+    <div class="card">
+        <h2><span class="step-badge">Paso 1</span>Espacio Muestral y Variables</h2>
+        <p>Al ser distribuciones uniformes, podemos modelar el espacio muestral como un rectángulo en el plano cartesiano.</p>
+        <ul>
+            <li>Base (Pablo): \(13 - 10 = 3\) unidades.</li>
+            <li>Altura (Ana): \(15 - 11 = 4\) unidades.</li>
+        </ul>
+        $$Area_{Total} = 3 \times 4 = 12$$
+    </div>
+
+    <div class="card">
+        <h2><span class="step-badge">Paso 2</span>Análisis de la Condición</h2>
+        <p>Nos piden la probabilidad condicional:</p>
+        $$P(PabloGana \mid Diferencia > 1) = \frac{\text{Área(Gana Pablo Y Diferencia > 1)}}{\text{Área(Diferencia > 1)}}$$
+        
+        <p>La condición \(|P - A| > 1\) se divide en dos casos excluyentes:</p>
+        <ol>
+            <li><strong>Caso 1 (Gana Pablo):</strong> \(A - P > 1 \implies A > P + 1\)</li>
+            <li><strong>Caso 2 (Gana Ana):</strong> \(P - A > 1 \implies A < P - 1\)</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2><span class="step-badge">Paso 3</span>Cálculo Gráfico de Áreas</h2>
+        <p>Calculamos el área de cada región dentro del rectángulo definido.</p>
+
+        <div class="svg-container">
+            <svg width="450" height="400" viewBox="-40 -20 380 400">
+                <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#333" /></marker>
+                </defs>
+                <line x1="0" y1="350" x2="320" y2="350" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+                <line x1="0" y1="350" x2="0" y2="0" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+                <text x="320" y="370" text-anchor="end">Pablo</text>
+                <text x="10" y="0" text-anchor="start">Ana</text>
+                <rect x="0" y="30" width="300" height="320" fill="none" stroke="#ccc" stroke-dasharray="5,5"/>
+                <text x="-30" y="355">11</text><text x="-30" y="30">15</text>
+                <text x="0" y="370">10</text><text x="300" y="370">13</text>
+                <polygon points="0,350 300,110 300,30 0,30" class="shape-pablo" />
+                <text x="80" y="150" fill="#2980b9" font-weight="bold">Área Pablo (7.5)</text>
+                <polygon points="200,350 300,270 300,350" class="shape-ana" />
+                <text x="210" y="330" fill="#c0392b" font-weight="bold" font-size="12">Ana (0.5)</text>
+            </svg>
+        </div>
+
+        <h3>A. Área Favorable a Pablo (Trapecio Azul)</h3>
+        <p>Región donde \(A > P + 1\). Es un trapecio con alturas 4 y 1, y base 3.</p>
+        $$Area_{Pablo} = \frac{4 + 1}{2} \times 3 = \mathbf{7.5}$$
+
+        <h3>B. Área Favorable a Ana (Triángulo Rojo)</h3>
+        <p>Región donde \(A < P - 1\). Es un triángulo de base 1 y altura 1.</p>
+        $$Area_{Ana} = \frac{1 \times 1}{2} = \mathbf{0.5}$$
+    </div>
+
+    <div class="card result-box">
+        <h2><span class="step-badge">Paso 4</span>Probabilidad Final</h2>
+        <p>Sumamos las áreas para obtener el denominador (Total de casos donde la diferencia > 1):</p>
+        $$Area_{TotalCondicion} = 7.5 + 0.5 = 8.0$$
+
+        <p>La probabilidad de que sea Pablo quien ganó es su área favorable dividida por el área total de la condición:</p>
+        
+        $$P = \frac{Area_{Pablo}}{Area_{TotalCondicion}} = \frac{7.5}{8.0}$$
+        
+        <hr style="border: 0; border-top: 1px solid #bdc3c7; margin: 15px 0;">
+        
+        <h3>Resultado:</h3>
+        $$P = \frac{15}{16} = \mathbf{0.9375}$$
+        <p><em>(Existe un 93.75% de probabilidad de que haya ganado Pablo).</em></p>
+    </div>
+
+</body>
+</html>
