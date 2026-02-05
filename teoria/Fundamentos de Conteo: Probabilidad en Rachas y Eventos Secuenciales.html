@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teoría: Probabilidad en Rachas</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --highlight-bg: #e8f4f8;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: var(--accent-color);
+            margin-top: 30px;
+        }
+        h3 {
+            color: var(--primary-color);
+            margin-top: 25px;
+        }
+        .concept-box {
+            background-color: var(--highlight-bg);
+            border-left: 5px solid var(--accent-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .example-box {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            background-color: #fffdf5;
+        }
+        .logic-step {
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 2px solid #ccc;
+        }
+        .formula {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            background: #eee;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        strong {
+            color: var(--primary-color);
+        }
+        .important {
+            color: #c0392b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Fundamentos de Conteo: Probabilidad en Rachas</h1>
+    
+    <p>Este documento resume la metodología para resolver problemas de combinatoria y probabilidad donde buscamos patrones repetitivos (rachas) en una secuencia de eventos independientes.</p>
+
+    <h2>1. Conceptos Básicos</h2>
+    
+    <h3>Espacio Equiprobable (Ley de Laplace)</h3>
+    <p>Cuando todos los resultados individuales tienen la misma posibilidad de ocurrir, la probabilidad de un evento \(A\) se calcula como:</p>
+    <div class="formula">
+        $$P(A) = \frac{\text{Casos Favorables}}{\text{Casos Totales}}$$
+    </div>
+
+    <h3>Independencia de Eventos</h3>
+    <p>En problemas secuenciales (semanas, tiradas de dados, monedas), lo que sucede en el paso \(t\) no afecta al paso \(t+1\). Esto nos permite usar el <strong>Principio de Multiplicación</strong>: para obtener el total de combinaciones, multiplicamos las opciones disponibles en cada paso.</p>
+
+    <hr>
+
+    <h2>2. Teoría de la Elección: El Líder vs. El Seguidor</h2>
+    <div class="concept-box">
+        <p><strong>El problema común:</strong> ¿Por qué al calcular una racha de "3 iguales" multiplicamos por \(N\) (ej. 3) al principio y no por 1?</p>
+    </div>
+
+    <p>Para entender esto, debemos distinguir entre tener <strong>Grados de Libertad</strong> y tener una <strong>Restricción</strong>.</p>
+
+    <div class="logic-step">
+        <strong>A. El Líder (Grados de Libertad):</strong><br>
+        Es el primer elemento de la racha. ¿Estamos obligados a que sea un personaje específico (solo Freddy)? No. Puede ser cualquiera de las opciones disponibles.
+        <br><em>Acción:</em> Multiplicamos por la cantidad total de opciones \(N\).
+    </div>
+
+    <div class="logic-step">
+        <strong>B. El Seguidor (Restricción):</strong><br>
+        Son los elementos siguientes de la racha. ¿Tienen libertad? No. Para que exista la racha, están obligados a copiar al Líder.
+        <br><em>Acción:</em> Multiplicamos por 1 (solo existe una opción válida: "lo mismo que salió antes").
+    </div>
+
+    <p>Si pusiéramos un 1 al principio, estaríamos calculando la probabilidad de una racha de un elemento <em>predefinido</em>, no de una racha <em>cualquiera</em>.</p>
+
+    <hr>
+
+    <h2>3. Caso de Estudio: Pablito y los Chocolatines</h2>
+    <p><strong>Objetivo:</strong> Racha de exactamente 3 personajes iguales en 5 semanas (3 opciones de personajes: A, B, C).</p>
+    
+    <h3>Estrategia de Partición</h3>
+    <p>Debemos dividir el problema en escenarios mutuamente excluyentes según la posición de la racha para controlar a los vecinos (los que rompen la racha).</p>
+
+    <ul>
+        <li><strong>Escenario Inicio (Semanas 1, 2, 3):</strong> 
+            $$ \underbrace{3}_{\text{Líder}} \times \underbrace{1 \times 1}_{\text{Seguidores}} \times \underbrace{2}_{\text{Diferente}} \times \underbrace{3}_{\text{Libre}} $$
+        </li>
+        <li><strong>Escenario Medio (Semanas 2, 3, 4):</strong> 
+            $$ \underbrace{2}_{\text{Diferente}} \times \underbrace{3}_{\text{Líder}} \times \underbrace{1 \times 1}_{\text{Seguidores}} \times \underbrace{2}_{\text{Diferente}} $$
+        </li>
+        <li><strong>Escenario Final (Semanas 3, 4, 5):</strong> 
+            $$ \underbrace{3}_{\text{Libre}} \times \underbrace{2}_{\text{Diferente}} \times \underbrace{3}_{\text{Líder}} \times \underbrace{1 \times 1}_{\text{Seguidores}} $$
+        </li>
+    </ul>
+
+    <hr>
+
+    <h2>4. Ejemplo de Práctica: Dados y Rachas</h2>
+    <div class="example-box">
+        <p><strong>Ejercicio:</strong> Se lanza un dado de 6 caras (números 1 al 6) <strong>4 veces</strong>. Calcular la probabilidad de obtener el mismo número en <strong>exactamente 3 tiradas consecutivas</strong>.</p>
+        
+        <p><strong>1. Casos Totales:</strong> \(6^4 = 1296\)</p>
+
+        <p><strong>2. Casos Favorables:</strong></p>
+        
+        <p><em>Caso A: Racha al inicio (T1, T2, T3 iguales)</em><br>
+        Estructura: [X X X] Y</p>
+        <ul>
+            <li>T1 (Líder): 6 opciones.</li>
+            <li>T2 (Seguidor): 1 opción.</li>
+            <li>T3 (Seguidor): 1 opción.</li>
+            <li>T4 (Rompe-racha): Debe ser distinto a T1. Hay 5 opciones.</li>
+        </ul>
+        $$ 6 \times 1 \times 1 \times 5 = 30 \text{ casos} $$
+
+        <p><em>Caso B: Racha al final (T2, T3, T4 iguales)</em><br>
+        Estructura: Y [X X X]</p>
+        <ul>
+            <li>T1 (Rompe-racha): Debe ser distinto a T2. Hay 5 opciones.</li>
+            <li>T2 (Líder): 6 opciones.</li>
+            <li>T3 (Seguidor): 1 opción.</li>
+            <li>T4 (Seguidor): 1 opción.</li>
+        </ul>
+        $$ 5 \times 6 \times 1 \times 1 = 30 \text{ casos} $$
+
+        <p><strong>3. Resultado Final:</strong></p>
+        $$ P(E) = \frac{30 + 30}{1296} = \frac{60}{1296} \approx 4.6\% $$
+    </div>
+
+</div>
+
+</body>
+</html>

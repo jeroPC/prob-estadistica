@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolución: Naranjas y TCL</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.0"></script>
+
+    <style>
+        :root {
+            --primary: #d35400;   /* Naranja Oscuro */
+            --accent: #f39c12;    /* Naranja Claro */
+            --text: #2c3e50;
+            --bg: #fefcf5;        /* Fondo crema suave */
+            --box-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* ENUNCIADO */
+        .problem-card {
+            background: var(--box-bg);
+            border-left: 6px solid var(--primary);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .problem-card h2 { margin-top: 0; color: var(--primary); }
+
+        /* PASOS */
+        .step-box {
+            background: var(--box-bg);
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .step-header {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+        }
+
+        /* FÓRMULAS DESTACADAS */
+        .formula-highlight {
+            background: #fdf2e9;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--accent);
+            margin: 15px 0;
+        }
+
+        /* GRÁFICO */
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            height: 350px;
+            position: relative;
+        }
+
+        .result {
+            font-size: 1.5em;
+            color: #27ae60;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #eafaf1;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="problem-card">
+        <h2>Ejercicio 5: El Lote de Naranjas</h2>
+        <p><strong>Enunciado:</strong> Los pesos (en kg) de las naranjas que produce un árbol son variables aleatorias independientes con distribución uniforme sobre el intervalo \((2, 4)\). Se consideran <em>grandes</em> las naranjas de más de 3 kg, y <em>chicas</em> al resto.</p>
+        <p>Calcular aproximadamente la probabilidad de que el <strong>peso total</strong> de un lote de <strong>50 naranjas grandes</strong> supere los <strong>170 kg</strong>.</p>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header">Paso 1: Definir la Variable "Naranja Grande"</div>
+        <p>La variable original es \(X \sim U(2,4)\). Pero el problema nos filtra: "Solo naranjas grandes" (\(X > 3\)).</p>
+        <p>Al recortar el intervalo original \((2,4)\) con la condición \(>3\), nos quedamos con el intervalo \((3,4)\).</p>
+        <div class="formula-highlight">
+            Nueva Variable \(Y \sim Uniforme(3, 4)\)
+        </div>
+        <p>Calculamos sus parámetros individuales:</p>
+        <ul>
+            <li><strong>Media Individual (\(\mu_Y\)):</strong> Punto medio entre 3 y 4 \(\rightarrow \mathbf{3.5}\) kg.</li>
+            <li><strong>Varianza Individual (\(\sigma^2_Y\)):</strong> \(\frac{(4-3)^2}{12} = \frac{1}{12} \approx \mathbf{0.0833}\).</li>
+        </ul>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header">Paso 2: Aplicar TCL a la Suma Total</div>
+        <p>Tenemos un lote de \(n=50\). Queremos analizar la variable <strong>Suma Total</strong> (\(S\)).</p>
+        <p>Por el Teorema Central del Límite, la Suma se distribuye Normal:</p>
+        
+        <p>$$ S \sim N(n \cdot \mu, \quad n \cdot \sigma^2) $$</p>
+        
+        <ul>
+            <li><strong>Media del Lote (\(\mu_S\)):</strong> \(50 \times 3.5 = \mathbf{175}\) kg.</li>
+            <li><strong>Desvío del Lote (\(\sigma_S\)):</strong> \(\sqrt{50 \times \frac{1}{12}} = \sqrt{4.167} \approx \mathbf{2.041}\) kg.</li>
+        </ul>
+        <p><em>Interpretación: Esperamos que el camión pese 175kg, con una variación típica de 2kg.</em></p>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header">Paso 3: Estandarización y Cálculo</div>
+        <p>Queremos la probabilidad de superar los 170kg: \(P(S > 170)\).</p>
+        <p>Estandarizamos usando la fórmula de la suma:</p>
+        
+        <div class="formula-highlight">
+            $$ Z = \frac{170 - 175}{2.041} = \frac{-5}{2.041} \approx \mathbf{-2.45} $$
+        </div>
+
+        <p>Buscamos el área a la derecha de -2.45. Por simetría, es igual al área a la izquierda de 2.45.</p>
+        <p>$$ P(Z > -2.45) = P(Z < 2.45) \approx \mathbf{0.9929} $$</p>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header">Visualización del Resultado</div>
+        <p>El siguiente gráfico muestra la distribución de peso probable del lote (Campana centrada en 175kg). El área pintada representa la probabilidad de superar los 170kg (prácticamente todo).</p>
+        
+        <div class="chart-container">
+            <canvas id="orangeChart"></canvas>
+        </div>
+
+        <div class="result">
+            Respuesta Final: 99.29%
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Configuración del Gráfico
+    const ctx = document.getElementById('orangeChart').getContext('2d');
+    
+    // Función Normal PDF para N(175, 2.041)
+    function normalPDF(x, mu, sigma) {
+        return (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2));
+    }
+
+    const mu = 175;
+    const sigma = 2.041;
+    
+    // Generar datos desde mu - 4sigma hasta mu + 4sigma
+    const labels = [];
+    const dataPoints = [];
+    const start = mu - (4 * sigma); // aprox 166
+    const end = mu + (4 * sigma);   // aprox 184
+    
+    for (let x = start; x <= end; x += 0.1) {
+        labels.push(x.toFixed(1));
+        dataPoints.push(normalPDF(x, mu, sigma));
+    }
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Distribución del Peso del Lote',
+                data: dataPoints,
+                borderColor: '#d35400',
+                borderWidth: 2,
+                pointRadius: 0,
+                fill: true,
+                segment: {
+                    backgroundColor: (ctx) => {
+                        // Pintar todo lo que sea mayor a 170 (la pregunta del problema)
+                        const xVal = parseFloat(labels[ctx.p0DataIndex]);
+                        if (xVal >= 170) return 'rgba(243, 156, 18, 0.6)'; // Naranja fuerte
+                        return 'rgba(200, 200, 200, 0.2)'; // Gris transparente
+                    }
+                }
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: { enabled: false },
+                legend: { display: true },
+                annotation: {
+                    annotations: {
+                        line1: {
+                            type: 'line',
+                            xMin: 170, // Donde la etiqueta del eje X coincide con 170
+                            xMax: 170,
+                            borderColor: 'red',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            label: {
+                                display: true,
+                                content: 'Límite 170kg',
+                                position: 'start',
+                                backgroundColor: 'rgba(255,0,0,0.7)'
+                            }
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: { display: false },
+                x: { 
+                    title: { display: true, text: 'Peso Total (kg)' },
+                    ticks: { maxTicksLimit: 10 }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teoría: Simulación y Distribución Empírica</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root { --primary: #8e44ad; --text: #333; --bg: #fdfefe; --box-bg: #f4ecf7; }
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h1 { color: var(--primary); border-bottom: 2px solid var(--primary); }
+        h2 { color: var(--primary); margin-top: 30px; }
+        .concept { background: var(--box-bg); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 5px solid var(--primary); }
+        .formula { text-align: center; font-size: 1.2em; margin: 15px 0; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Método de la Transformada Inversa</h1>
+    
+    <p>Este método es la piedra angular de la simulación. Nos permite convertir un número aleatorio uniforme (que es lo que generan las computadoras) en cualquier otra distribución (Exponencial, Normal, etc.).</p>
+
+    <h2>1. La Lógica del Método</h2>
+    <div class="concept">
+        <p><strong>Idea Clave:</strong> Igualamos la Función de Distribución Acumulada (CDF) de la variable deseada, \(F(x)\), a un número aleatorio \(u\) entre 0 y 1.</p>
+        <div class="formula">$$ F(x) = u \quad \Rightarrow \quad x = F^{-1}(u) $$</div>
+    </div>
+
+    <h2>2. Caso: Distribución Exponencial</h2>
+    <p>La CDF de una exponencial es \( F(x) = 1 - e^{-\lambda x} \).</p>
+    <p>Al despejar \(x\):</p>
+    <ul>
+        <li>\( 1 - e^{-\lambda x} = u \)</li>
+        <li>\( e^{-\lambda x} = 1 - u \)</li>
+        <li>\( -\lambda x = \ln(1 - u) \)</li>
+    </ul>
+    <div class="formula" style="background: #eee; padding: 10px;">
+        $$ x = -\frac{1}{\lambda} \ln(1 - u) $$
+    </div>
+    <p><em>Nota: Recuerda que si te dan la Media (\(\mu\)), entonces \(\lambda = 1/\mu\).</em></p>
+
+    <hr>
+
+    <h1>La Función de Distribución Empírica \(F_n(x)\)</h1>
+    <p>Es una estimación de la verdadera distribución basada puramente en los datos observados.</p>
+    
+    <div class="concept">
+        <p>Es una <strong>función escalonada</strong> que cumple:</p>
+        <ol>
+            <li>Ordenamos los datos simulados: \(x_{(1)} \le x_{(2)} \le ... \le x_{(n)}\).</li>
+            <li>La función empieza en 0.</li>
+            <li>En cada dato \(x_{(i)}\), la función "salta" una altura de \(1/n\).</li>
+            <li>Después del último dato, la función vale 1.</li>
+        </ol>
+    </div>
+</div>
+</body>
+</html>

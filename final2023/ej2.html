@@ -1,0 +1,201 @@
+        
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolución: Simulación Exponencial + Gráfico</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root { --primary: #2980b9; --bg: #f4f6f7; --text: #333; }
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; background: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        h1 { color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 10px; }
+        h2 { color: var(--primary); margin-top: 30px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        
+        .enunciado-box {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 20px;
+            margin-bottom: 30px;
+            font-style: italic;
+            color: #2c3e50;
+        }
+
+        .step { margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+        th { background-color: var(--primary); color: white; }
+        
+        .graph-desc { 
+            background: #eaf2f8; 
+            padding: 15px; 
+            border-left: 4px solid var(--primary); 
+            border-radius: 4px; 
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Ejercicio 2: Simulación Exponencial</h1>
+
+    <div class="enunciado-box">
+        <strong>Enunciado:</strong><br>
+        Dados los números aleatorios seleccionados sobre el intervalo \((0, 1)\):
+        <p style="text-align: center; font-weight: bold;">0.357; 0.494; 0.708; 0.819; 0.802</p>
+        Simular una muestra de 5 valores de una variable aleatoria con <strong>distribución exponencial de media 2</strong> y graficar la función de distribución empírica basada en esa muestra.
+    </div>
+
+    <div class="step">
+        <h2>Paso 1: Parámetros e Inversa</h2>
+        <p>El enunciado nos da la Media \(\mu = 2\). Sabemos que en la distribución exponencial \(\mu = 1/\lambda\), por lo tanto:</p>
+        <p>$$ \lambda = \frac{1}{2} = 0.5 $$</p>
+        <p>Usando el Método de la Transformada Inversa \(x = -\frac{1}{\lambda} \ln(1 - u)\), la fórmula generadora queda:</p>
+        <p style="background: #eee; padding: 10px; text-align: center; font-weight: bold;">$$ x = -2 \ln(1 - u) $$</p>
+    </div>
+
+    <div class="step">
+        <h2>Paso 2: Cálculo de Valores (Simulación)</h2>
+        <p>Aplicamos la fórmula generadora a cada número aleatorio dado:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Orden (i)</th>
+                    <th>Aleatorio (\(u_i\))</th>
+                    <th>Cálculo: \(-2 \ln(1 - u_i)\)</th>
+                    <th>Valor Simulado (\(x_i\))</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>0.357</td><td>\(-2 \ln(0.643)\)</td><td><strong>0.883</strong></td></tr>
+                <tr><td>2</td><td>0.494</td><td>\(-2 \ln(0.506)\)</td><td><strong>1.362</strong></td></tr>
+                <tr><td>3</td><td>0.708</td><td>\(-2 \ln(0.292)\)</td><td><strong>2.462</strong></td></tr>
+                <tr><td>4</td><td>0.819</td><td>\(-2 \ln(0.181)\)</td><td><strong>3.419</strong></td></tr>
+                <tr><td>5</td><td>0.802</td><td>\(-2 \ln(0.198)\)</td><td><strong>3.239</strong></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="step">
+        <h2>Paso 3: Función de Distribución Empírica \(F_n(x)\)</h2>
+        <p>Para construir la empírica, es obligatorio <strong>ordenar los valores simulados de menor a mayor</strong>:</p>
+        <p style="text-align: center; font-weight: bold; font-size: 1.1em; color: #2980b9;">0.883 < 1.362 < 2.462 < 3.239 < 3.419</p>
+        
+        <div class="graph-desc">
+            <h3>Análisis de la Gráfica</h3>
+            <p>La gráfica es una "escalera" que representa la probabilidad acumulada.</p>
+            <ul>
+                <li>Empieza en <strong>0</strong>.</li>
+                <li>Sube un escalón de <strong>0.2</strong> (1/5) en cada valor simulado.</li>
+                <li>Termina en <strong>1.0</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="empiricaChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('empiricaChart').getContext('2d');
+    
+    // Datos ordenados: 0.883, 1.362, 2.462, 3.239, 3.419
+    // Estructura para Chart.js "stepped":
+    // El valor se mantiene constante hasta el siguiente punto, luego sube.
+    const dataPoints = [
+        {x: 0, y: 0},          // Inicio en 0
+        {x: 0.883, y: 0.2},    // Primer salto
+        {x: 1.362, y: 0.4},    // Segundo salto
+        {x: 2.462, y: 0.6},    // Tercer salto
+        {x: 3.239, y: 0.8},    // Cuarto salto (ojo con el orden vs tabla original)
+        {x: 3.419, y: 1.0},    // Quinto salto
+        {x: 4.5, y: 1.0}       // Extensión final para ver que se mantiene en 1
+    ];
+
+    const empiricaChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'Fn(x) - Distribución Empírica',
+                data: dataPoints,
+                borderColor: '#2980b9',
+                backgroundColor: 'rgba(41, 128, 185, 0.2)',
+                borderWidth: 2,
+                fill: true,
+                stepped: 'after', // Esto crea el efecto escalera: mantiene el valor Y anterior hasta el nuevo punto X
+                pointRadius: 5,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#e74c3c'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'linear',
+                    title: {
+                        display: true,
+                        text: 'Valores Simulados (x)'
+                    },
+                    min: 0
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Probabilidad Acumulada Fn(x)'
+                    },
+                    min: 0,
+                    max: 1.2,
+                    ticks: {
+                        stepSize: 0.2
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Probabilidad Acumulada: ${context.parsed.y}`;
+                        }
+                    }
+                },
+                annotation: {
+                    annotations: {
+                        line1: {
+                            type: 'line',
+                            yMin: 1,
+                            yMax: 1,
+                            borderColor: 'rgb(200, 200, 200)',
+                            borderWidth: 1,
+                            borderDash: [5, 5]
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

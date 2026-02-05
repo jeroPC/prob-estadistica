@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolución: Pablito y los Chocolatines</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #27ae60; /* Verde para diferenciar que es un ejercicio resuelto */
+            --highlight-bg: #eafaf1;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: var(--primary-color);
+            margin-top: 30px;
+            background-color: #eee;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        h3 {
+            color: var(--accent-color);
+            margin-top: 25px;
+        }
+        .scenario-box {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+            background-color: #fff;
+        }
+        .visual-block {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.2em;
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            display: inline-block;
+            border-radius: 4px;
+            letter-spacing: 2px;
+        }
+        .racha { color: #f1c40f; } /* Amarillo para la racha */
+        .libre { color: #aaa; }    /* Gris para libre */
+        .rompe { color: #e74c3c; } /* Rojo para el que rompe */
+        
+        .explanation-list li {
+            margin-bottom: 8px;
+        }
+        .result-box {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: var(--highlight-bg);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ejercicio: Pablito y los Chocolatines</h1>
+    
+    <p><strong>Enunciado:</strong> Pablito compra 1 chocolatín por semana durante 5 semanas. Hay 3 personajes posibles (Freddy, Jason, Pennywise), todos equiprobables. Calcular la probabilidad de obtener el mismo personaje en <strong>exactamente 3 semanas consecutivas</strong>.</p>
+
+    <h2>Paso 1: Casos Totales</h2>
+    <p>Calculamos el espacio muestral considerando que cada semana hay 3 opciones independientes.</p>
+    $$ \text{Total} = 3 \times 3 \times 3 \times 3 \times 3 = 3^5 = \mathbf{243} $$
+
+    <h2>Paso 2: Casos Favorables (Partición)</h2>
+    <p>Dividimos el problema según la posición de la racha para controlar los extremos.</p>
+
+    <div class="scenario-box">
+        <h3>Caso A: Racha al Inicio (Semanas 1, 2, 3)</h3>
+        <p>Visualización: <span class="visual-block"><span class="racha">[X X X]</span> <span class="rompe">Y</span> <span class="libre">Z</span></span></p>
+        <ul class="explanation-list">
+            <li><strong>Semanas 1-3 (Racha):</strong> \(3\) opciones (Líder) \(\times 1 \times 1\) (Seguidores).</li>
+            <li><strong>Semana 4 (Rompe-racha):</strong> Debe ser distinta a la racha. \(2\) opciones.</li>
+            <li><strong>Semana 5 (Libre):</strong> Ya se rompió la racha, puede ser cualquiera. \(3\) opciones.</li>
+        </ul>
+        $$ 3 \times 1 \times 1 \times 2 \times 3 = \mathbf{18} \text{ casos} $$
+    </div>
+
+    <div class="scenario-box">
+        <h3>Caso B: Racha en el Medio (Semanas 2, 3, 4)</h3>
+        <p>Visualización: <span class="visual-block"><span class="rompe">Y</span> <span class="racha">[X X X]</span> <span class="rompe">Z</span></span></p>
+        <ul class="explanation-list">
+            <li><strong>Semana 1 (Rompe-racha):</strong> Debe ser distinta a la racha. \(2\) opciones.</li>
+            <li><strong>Semanas 2-4 (Racha):</strong> \(3\) opciones (Líder) \(\times 1 \times 1\) (Seguidores).</li>
+            <li><strong>Semana 5 (Rompe-racha):</strong> Debe ser distinta a la racha. \(2\) opciones.</li>
+        </ul>
+        $$ 2 \times 3 \times 1 \times 1 \times 2 = \mathbf{12} \text{ casos} $$
+    </div>
+
+    <div class="scenario-box">
+        <h3>Caso C: Racha al Final (Semanas 3, 4, 5)</h3>
+        <p>Visualización: <span class="visual-block"><span class="libre">Z</span> <span class="rompe">Y</span> <span class="racha">[X X X]</span></span></p>
+        <ul class="explanation-list">
+            <li><strong>Semana 1 (Libre):</strong> Puede ser cualquiera. \(3\) opciones.</li>
+            <li><strong>Semana 2 (Rompe-racha):</strong> Debe ser distinta a la racha. \(2\) opciones.</li>
+            <li><strong>Semanas 3-5 (Racha):</strong> \(3\) opciones (Líder) \(\times 1 \times 1\) (Seguidores).</li>
+        </ul>
+        $$ 3 \times 2 \times 3 \times 1 \times 1 = \mathbf{18} \text{ casos} $$
+    </div>
+
+    <h2>Paso 3: Cálculo Final</h2>
+    <p>Sumamos los casos favorables y dividimos por el total.</p>
+    
+    $$ \text{Favorables} = 18 + 12 + 18 = \mathbf{48} $$
+
+    <div class="result-box">
+        $$ P(E) = \frac{48}{243} = \frac{16}{81} $$
+        <span style="font-size: 0.6em; color: #666; font-weight: normal;">(Aprox. 19.75%)</span>
+    </div>
+
+</div>
+
+</body>
+</html>

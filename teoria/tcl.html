@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Maestra: TCL y Simetría Normal</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --blue: #3498db;
+            --red: #e74c3c;
+            --green: #27ae60;
+            --orange: #d35400;
+            --bg: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--primary);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border-bottom: 4px solid var(--blue);
+        }
+        header h1 { margin: 0; color: var(--primary); }
+        header p { color: #7f8c8d; }
+
+        /* TARJETAS GENERALES */
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .card h2 { margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px; color: var(--blue); }
+
+        /* SECCIÓN 1: FÓRMULAS (GRID) */
+        .formula-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .formula-box {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #eee;
+            transition: transform 0.2s;
+        }
+        .formula-box:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
+        .f-avg { background: #eafaf1; border-top: 4px solid var(--green); }
+        .f-sum { background: #fdf2e9; border-top: 4px solid var(--orange); }
+
+        .case-title { font-weight: bold; display: block; margin-bottom: 10px; font-size: 1.1em; }
+        .keyword { background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+
+        /* SECCIÓN 2: SIMETRÍA */
+        .symmetry-concept {
+            background: #eaf2f8;
+            border-left: 5px solid var(--blue);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* SECCIÓN 3: INTERACTIVO */
+        .controls {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        input[type=range] { width: 60%; cursor: pointer; margin: 10px 0; }
+        
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+        .result-badges {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        .badge {
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: white;
+            min-width: 120px;
+            text-align: center;
+        }
+        .badge-red { background-color: var(--red); }
+        .badge-blue { background-color: var(--blue); }
+
+        @media (max-width: 600px) { .formula-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Teorema Central del Límite</h1>
+        <p>Matriz de Fórmulas y Visualizador de Simetría</p>
+    </header>
+
+    <div class="card">
+        <h2>1. Matriz de Decisión: ¿Qué fórmula uso?</h2>
+        <p>El TCL normaliza cualquier distribución, pero debes elegir la fórmula según lo que te pidan calcular:</p>
+        
+        <div class="formula-grid">
+            <div class="formula-box f-avg">
+                <span class="case-title" style="color: var(--green);">CASO A: PROMEDIO (\(\bar{X}\))</span>
+                <p style="font-size: 0.9em;">Úsala cuando la pregunta diga:<br>
+                <em>"Calcular la prob. de que el <span class="keyword">promedio</span>..."</em><br>
+                <em>"Que la <span class="keyword">media muestral</span> sea..."</em></p>
+                
+                $$ Z = \frac{\bar{X} - \mu}{\frac{\sigma}{\sqrt{n}}} $$
+            </div>
+
+            <div class="formula-box f-sum">
+                <span class="case-title" style="color: var(--orange);">CASO B: SUMA TOTAL (\(S\))</span>
+                <p style="font-size: 0.9em;">Úsala cuando la pregunta diga:<br>
+                <em>"Calcular la prob. de que el <span class="keyword">total</span>..."</em><br>
+                <em>"Que la <span class="keyword">carga completa</span> supere..."</em></p>
+                
+                $$ Z = \frac{S - n \cdot \mu}{\sqrt{n} \cdot \sigma} $$
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 15px; font-style: italic; font-size: 0.9em;">
+            ⚠️ Nota: Usar la fórmula equivocada dará un valor Z incorrecto. ¡Identifica la palabra clave en el enunciado!
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>2. El "Espejo" de la Normal</h2>
+        <div class="symmetry-concept">
+            <strong>El Problema:</strong> Las tablas Z suelen dar el área a la izquierda (acumulada). ¿Qué pasa si tienes un \(Z\) negativo (ej: -2.45) y te piden el área a la derecha ("mayor que")?
+            <br><br>
+            <strong>La Solución (Simetría):</strong>
+            $$ P(Z > -x) = P(Z < x) $$
+            Como la campana es un espejo perfecto, el área que "sobra" a la derecha de un negativo es idéntica al área acumulada a la izquierda de su gemelo positivo.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>3. Laboratorio Visual</h2>
+        <p>Mueve el deslizador. Verás cómo se pintan dos áreas simultáneamente:</p>
+        <ul>
+            <li><span style="color: var(--red); font-weight: bold;">ROJO:</span> Área a la derecha del negativo (\(Z > -x\)).</li>
+            <li><span style="color: var(--blue); font-weight: bold;">AZUL:</span> Área a la izquierda del positivo (\(Z < x\)).</li>
+        </ul>
+        <p>Observa que siempre son iguales y se superponen en el centro (color violeta).</p>
+
+        <div class="controls">
+            <label style="font-weight: bold;">Valor X: <span id="valDisplay" style="color: var(--blue); font-size: 1.2em;">2.45</span></label><br>
+            <input type="range" id="slider" min="0" max="3.5" step="0.05" value="2.45">
+        </div>
+
+        <div class="chart-container">
+            <canvas id="mainChart"></canvas>
+        </div>
+
+        <div class="result-badges">
+            <div class="badge badge-red">
+                \(P(Z > -x)\)<br>
+                <span id="probRed">99.29%</span>
+            </div>
+            <div style="align-self: center; font-size: 1.5em;">=</div>
+            <div class="badge badge-blue">
+                \(P(Z < x)\)<br>
+                <span id="probBlue">99.29%</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- 1. DATOS PRE-CALCULADOS (Optimización de Rendimiento) ---
+    const xValues = [];
+    const yValues = [];
+    
+    // Generamos la curva normal estándar (Media 0, Desvío 1)
+    for (let i = -4.5; i <= 4.5; i += 0.1) {
+        xValues.push(i.toFixed(1));
+        yValues.push((1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * i * i));
+    }
+
+    // --- 2. CONFIGURACIÓN DEL GRÁFICO ---
+    const ctx = document.getElementById('mainChart').getContext('2d');
+    
+    // Variable para controlar el slider
+    let currentX = 2.45;
+
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: xValues,
+            datasets: [{
+                label: 'Distribución Normal',
+                data: yValues,
+                borderColor: '#2c3e50',
+                borderWidth: 2,
+                pointRadius: 0, // Sin puntos para que sea fluido
+                fill: true,
+                segment: {
+                    backgroundColor: (ctx) => {
+                        // Lógica de Pintado
+                        const val = parseFloat(xValues[ctx.p0DataIndex]);
+                        
+                        // Condiciones
+                        const isRightOfNeg = val >= -currentX; // Zona Roja
+                        const isLeftOfPos = val <= currentX;   // Zona Azul
+                        
+                        // Intersección (Violeta suave)
+                        if (isRightOfNeg && isLeftOfPos) return 'rgba(155, 89, 182, 0.2)';
+                        
+                        // Solo Rojo (Cola derecha extrema)
+                        if (isRightOfNeg) return 'rgba(231, 76, 60, 0.5)';
+                        
+                        // Solo Azul (Cola izquierda extrema)
+                        if (isLeftOfPos) return 'rgba(52, 152, 219, 0.5)';
+                        
+                        return 'transparent';
+                    }
+                }
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false, // CLAVE: Sin animación para respuesta instantánea
+            plugins: { 
+                legend: { display: false },
+                tooltip: { enabled: false },
+                annotation: {
+                    // Líneas verticales para marcar -X y X
+                    annotations: {
+                        lineNeg: {
+                            type: 'line',
+                            scaleID: 'x',
+                            value: -2.45,
+                            borderColor: '#e74c3c',
+                            borderWidth: 2,
+                            label: { content: '-x', display: true, position: 'start', color: '#e74c3c' }
+                        },
+                        linePos: {
+                            type: 'line',
+                            scaleID: 'x',
+                            value: 2.45,
+                            borderColor: '#3498db',
+                            borderWidth: 2,
+                            label: { content: 'x', display: true, position: 'end', color: '#3498db' }
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } },
+                y: { display: false, min: 0 }
+            }
+        }
+    });
+
+    // --- 3. LÓGICA MATEMÁTICA Y DOM ---
+    const slider = document.getElementById('slider');
+    const display = document.getElementById('valDisplay');
+    const probRed = document.getElementById('probRed');
+    const probBlue = document.getElementById('probBlue');
+
+    // Función CDF Normal (Aproximación numérica precisa)
+    function getNormalCDF(z) {
+        const t = 1 / (1 + 0.2316419 * Math.abs(z));
+        const d = 0.3989423 * Math.exp(-z * z / 2);
+        const prob = 1 - d * t * ((((1.330274 * t - 1.821256) * t + 1.781478) * t - 0.3565638) * t + 0.3193815);
+        return z > 0 ? prob : 1 - prob;
+    }
+
+    // Evento del Slider
+    slider.addEventListener('input', (e) => {
+        currentX = parseFloat(e.target.value);
+        display.textContent = currentX.toFixed(2);
+
+        // Actualizar Probabilidades
+        const p = (getNormalCDF(currentX) * 100).toFixed(2) + '%';
+        probRed.textContent = p;
+        probBlue.textContent = p;
+
+        // Actualizar Líneas Verticales (si el plugin annotation carga)
+        if (chart.options.plugins.annotation) {
+            chart.options.plugins.annotation.annotations.lineNeg.value = -currentX;
+            chart.options.plugins.annotation.annotations.linePos.value = currentX;
+        }
+
+        // Redibujar
+        chart.update();
+    });
+
+</script>
+
+</body>
+</html>
