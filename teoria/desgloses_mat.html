@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desgloses Matemáticos: Kit de Supervivencia</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #27ae60; --dark: #1e8449; --bg: #f2f3f4; }
+        body { font-family: 'Courier New', Courier, monospace; line-height: 1.6; color: #333; max-width: 950px; margin: 0 auto; padding: 30px; background: var(--bg); }
+        h1 { text-align: center; color: var(--dark); background: #fff; padding: 20px; border-radius: 8px; border-bottom: 4px solid var(--primary); }
+        .trick-card { background: #fff; margin-bottom: 30px; border-radius: 8px; padding: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .trick-title { font-family: 'Segoe UI', sans-serif; color: var(--dark); font-size: 1.3em; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; font-weight: bold; }
+        .comparison { display: flex; gap: 20px; align-items: center; justify-content: center; background: #fafafa; padding: 15px; border-radius: 6px; }
+        .arrow { color: var(--primary); font-size: 1.5em; }
+        .formula-box { background: #2c3e50; color: #ecf0f1; padding: 10px; border-radius: 4px; display: inline-block; margin: 5px 0; }
+        .note { font-family: 'Segoe UI', sans-serif; font-size: 0.9em; color: #555; margin-top: 10px; }
+        
+        /* Estilos nuevos para el ejemplo paso a paso */
+        .example-box { background-color: #e8f8f5; border-left: 5px solid #1abc9c; padding: 15px; margin-top: 15px; border-radius: 4px; }
+        .step-badge { background: #16a085; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.8em; margin-right: 5px; font-family: sans-serif; }
+    </style>
+</head>
+<body>
+
+    <h1><i class="fas fa-toolbox"></i> Desgloses Matemáticos y Trucos</h1>
+    <p style="text-align: center;"><em>"No fallas en estadística, fallas en álgebra". Aquí la solución.</em></p>
+
+    <div class="trick-card">
+        <div class="trick-title">1. El Misterio de la Productoria (\(\prod\))</div>
+        <p>Cuando multiplicas \(n\) veces lo mismo, pasan cosas diferentes según qué sea:</p>
+        
+        <div class="comparison">
+            <div>
+                <strong>Constante \(C\)</strong><br>
+                \(\prod_{i=1}^n C\)
+            </div>
+            <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+            <div class="formula-box">\(C^n\)</div>
+        </div>
+        <p class="note">Ejemplo: \(2 \times 2 \times 2 \dots = 2^n\). (No es \(n \times C\), ¡eso es suma!)</p>
+
+        <div class="comparison" style="margin-top: 15px;">
+            <div>
+                <strong>Exponencial \(e^{x_i}\)</strong><br>
+                \(\prod_{i=1}^n e^{x_i}\)
+            </div>
+            <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+            <div class="formula-box">\(e^{\sum x_i}\)</div>
+        </div>
+        <p class="note">Al multiplicar bases iguales, los exponentes se SUMAN.</p>
+    </div>
+
+    <div class="trick-card">
+        <div class="trick-title">2. Logaritmos: El "Desarmador"</div>
+        <p>El Logaritmo Natural (\(\ln\)) es tu mejor amigo para romper productos.</p>
+        
+        <ul>
+            <li>\(\ln(A \cdot B) \rightarrow \ln(A) + \ln(B)\) <span style="color:green;">(Producto se vuelve Suma)</span></li>
+            <li>\(\ln\left(\frac{A}{B}\right) \rightarrow \ln(A) - \ln(B)\) <span style="color:green;">(División se vuelve Resta)</span></li>
+            <li>\(\ln(A^n) \rightarrow n \cdot \ln(A)\) <span style="color:green;">(Potencia baja multiplicando)</span></li>
+            <li>\(\ln(e^A) \rightarrow A\) <span style="color:green;">(Se cancelan mutuamente)</span></li>
+        </ul>
+    </div>
+
+    <div class="trick-card" style="border-left: 5px solid #e74c3c;">
+        <div class="trick-title">3. Desglose Avanzado (Caso Lavarropas)</div>
+        <p>¿Cómo atacar una expresión mixta como esta?</p>
+        $$f_{\theta}(t) = \frac{1}{2\sqrt{\theta t}} \cdot e^{-\sqrt{\frac{t}{\theta}}}$$
+        
+        <p><strong>Estrategia de Separación:</strong></p>
+        <p>Separa todo lo que tenga \(\theta\) de lo que tenga \(t\).</p>
+        
+        $$f(t) = \left( \frac{1}{2\sqrt{t}} \cdot \frac{1}{\sqrt{\theta}} \right) \cdot \left( e^{-\frac{\sqrt{t}}{\sqrt{\theta}}} \right)$$
+        
+        <p>Al aplicar la productoria \(\prod\) para \(n\) datos:</p>
+        <ol>
+            <li>La parte sin \(\theta\) (\(\frac{1}{2\sqrt{t}}\)) se agrupa sola.</li>
+            <li>La parte \(\frac{1}{\sqrt{\theta}}\) se multiplica \(n\) veces \(\rightarrow\) \(\left(\frac{1}{\sqrt{\theta}}\right)^n\) o \(\theta^{-n/2}\).</li>
+            <li>La parte exponencial suma sus exponentes \(\rightarrow\) \(e^{-\frac{1}{\sqrt{\theta}} \sum \sqrt{x_i}}\).</li>
+        </ol>
+    </div>
+
+    <div class="trick-card">
+        <div class="trick-title">4. Derivadas de Raíces y Fracciones</div>
+        <p>No uses la regla del cociente. Usa exponentes negativos.</p>
+        
+        <p><strong>Caso: Derivar \(\frac{1}{\sqrt{\theta}}\)</strong></p>
+        <p>1. Reescribe: \(\theta^{-1/2}\)</p>
+        <p>2. Baja exponente y resta 1: \(-\frac{1}{2} \theta^{-3/2}\)</p>
+        <p>3. Reescribe bonito: \(-\frac{1}{2\theta\sqrt{\theta}}\)</p>
+
+        <p><strong>Caso: Derivar \(\ln(\theta)\)</strong></p>
+        <p>\(\frac{d}{d\theta} \ln(\theta) = \frac{1}{\theta}\)</p>
+    </div>
+
+    <div class="trick-card">
+        <div class="trick-title">5. El Truco de la Sustitución \(u\)</div>
+        <p>Si tienes \(\int \text{AlgoRaro} \cdot e^{\text{ExponenteRaro}} dt\):</p>
+        <p>Siempre intenta <strong>\(u = \text{ExponenteRaro}\)</strong>.</p>
+        <p>En estadística, el 99% de las veces, la derivada de ese exponente ("AlgoRaro") está escondida en la función para que se cancele.</p>
+        
+        <div class="example-box">
+            <h4 style="margin-top:0; color:#16a085;">Ejemplo Práctico: "El caso de la Raíz"</h4>
+            <p>Queremos integrar esto (muy similar al ej. de lavarropas):</p>
+            $$ \int \left( \frac{1}{2\sqrt{t}} \right) \cdot e^{-\sqrt{t}} \, dt $$
+            
+            <p><span class="step-badge">Paso 1</span> Identifica el exponente molesto:</p>
+            <p>El exponente es \(-\sqrt{t}\). Hagamos \(u = \sqrt{t}\).</p>
+
+            <p><span class="step-badge">Paso 2</span> Deriva \(u\) para obtener \(du\):</p>
+            $$u = t^{1/2} \implies du = \frac{1}{2}t^{-1/2} dt = \frac{1}{2\sqrt{t}} dt$$
+
+            <p><span class="step-badge">Paso 3</span> ¡Mira la magia!</p>
+            <p>Observa tu integral original. ¿Ves que tienes justo \(\frac{1}{2\sqrt{t}} dt\)?</p>
+            <p>Reemplazamos TODO ese bloque por \(du\):</p>
+            
+            $$ \int \underbrace{\left( \frac{1}{2\sqrt{t}} dt \right)}_{du} \cdot \underbrace{e^{-\sqrt{t}}}_{e^{-u}} = \int e^{-u} du $$
+            
+            <p><span class="step-badge">Final</span> La integral de \(e^{-u}\) es trivial:</p>
+            $$-e^{-u} = -e^{-\sqrt{t}}$$
+        </div>
+    </div>
+
+</body>
+</html>

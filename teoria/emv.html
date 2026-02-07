@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enciclopedia del EMV: Teoría y Práctica</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50; /* Azul oscuro elegante */
+            --accent: #d35400; /* Naranja para destaques */
+            --theory: #2980b9; /* Azul claro teoría */
+            --practice: #27ae60; /* Verde práctica */
+            --bg: #fdfdfd;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.7;
+            color: #333;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 40px;
+            background: var(--bg);
+        }
+        h1 { text-align: center; color: var(--primary); border-bottom: 4px solid var(--accent); padding-bottom: 20px; margin-bottom: 40px; }
+        h2 { color: var(--primary); margin-top: 50px; border-left: 5px solid var(--accent); padding-left: 15px; }
+        h3 { color: var(--theory); margin-top: 30px; }
+        
+        /* Cajas de Contenido */
+        .box { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #eee; }
+        .theory-box { border-top: 4px solid var(--theory); }
+        .practice-box { border-top: 4px solid var(--practice); }
+        .alert-box { background: #fdedec; border: 1px solid #fadbd8; color: #c0392b; padding: 15px; border-radius: 8px; }
+        
+        /* Analogía */
+        .analogy { background: #eaf2f8; padding: 20px; border-radius: 8px; border-left: 5px solid #3498db; margin: 20px 0; color: #2c3e50; }
+        
+        /* Pasos Algorítmicos */
+        .step { display: flex; align-items: flex-start; margin-bottom: 15px; background: #fff; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .step-num { background: var(--practice); color: white; min-width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; margin-top: 3px; }
+        
+        code { background: #eee; padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #c0392b; }
+    </style>
+</head>
+<body>
+
+    <h1>Enciclopedia del Estimador de Máxima Verosimilitud (EMV)</h1>
+    <p style="text-align: center; font-size: 1.2em;">Desde la filosofía hasta la resolución de exámenes.</p>
+
+    <h2>1. El Origen: ¿De dónde sale todo esto?</h2>
+    
+    <div class="box theory-box">
+        <h3><i class="fas fa-brain"></i> Filosofía: Ingeniería Inversa de la Probabilidad</h3>
+        <p>Normalmente, la probabilidad funciona hacia adelante: <em>"Si la moneda es justa (p=0.5), ¿qué probabilidad hay de sacar 10 caras?"</em>.</p>
+        <p>La Verosimilitud (Likelihood) funciona <strong>hacia atrás</strong> (Ingeniería Inversa):</p>
+        <p><em>"Ya saqué 10 caras. ¿Cuál es el valor de 'p' que hace que este resultado, que ya ocurrió, fuera lo más probable posible?"</em></p>
+        
+        <div class="analogy">
+            <strong><i class="fas fa-search"></i> Analogía del Francotirador:</strong><br>
+            Encuentras una pared con un montón de balazos agrupados en un punto específico.<br>
+            No sabes dónde estaba parado el francotirador (\(\theta\)).<br>
+            El EMV dice: "Asumamos que el francotirador estaba parado justo enfrente del grupo de balazos, porque esa es la posición que hace <strong>más probable</strong> haberle dado a ese punto".
+        </div>
+    </div>
+
+    <div class="box theory-box">
+        <h3><i class="fas fa-flask"></i> El Origen Matemático: La Independencia</h3>
+        <p>¿Por qué multiplicamos las funciones (\(\prod\))?</p>
+        <p>Asumimos que cada dato de la muestra es <strong>independiente</strong> de los otros (Muestra Aleatoria Simple). En probabilidad, cuando eventos independientes ocurren juntos ("A y B y C"), sus probabilidades se multiplican.</p>
+        $$L(\theta) = f(x_1) \times f(x_2) \times \dots \times f(x_n) = \prod_{i=1}^n f(x_i; \theta)$$
+        <p>Esta es la <strong>Función de Verosimilitud Conjunta</strong>.</p>
+    </div>
+
+    <h2>2. El Algoritmo de Resolución (Paso a Paso)</h2>
+    <p>Este es el "script" que debes ejecutar en tu cerebro para resolver cualquier ejercicio estándar.</p>
+
+    <div class="practice-box">
+        <div class="step">
+            <div class="step-num">1</div>
+            <div>
+                <strong>Armar la Función L</strong><br>
+                Multiplica la densidad de tu variable \(n\) veces. Agrupa las constantes y suma los exponentes.
+                $$L(\theta) = \prod f(x_i, \theta)$$
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-num">2</div>
+            <div>
+                <strong>Aplicar Logaritmo Natural (\(\ln\))</strong><br>
+                <em>¿Por qué?</em> Porque maximizar \(L(\theta)\) es lo mismo que maximizar \(\ln(L(\theta))\) (el logaritmo es creciente), pero el logaritmo convierte productos en sumas, lo que es infinitamente más fácil de derivar.
+                $$\ell(\theta) = \ln(L(\theta))$$
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">3</div>
+            <div>
+                <strong>Derivar respecto a \(\theta\) (El Gradiente)</strong><br>
+                Buscamos la cima de la montaña. En el pico máximo, la pendiente (derivada) es cero (plana).
+                $$\frac{\partial \ell(\theta)}{\partial \theta} = 0$$
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">4</div>
+            <div>
+                <strong>Despejar \(\theta\) (El Estimador)</strong><br>
+                Resuelve la ecuación para \(\theta\). Al resultado ponle un sombrero (\(\hat{\theta}\)) porque es una estimación, no el valor real de Dios.
+            </div>
+        </div>
+    </div>
+
+    <h2>3. La Trampa Mortal: Cuando NO se puede derivar</h2>
+    <div class="alert-box">
+        <h3><i class="fas fa-exclamation-triangle"></i> ¡Cuidado con las Uniformes!</h3>
+        <p>Si el rango de tu variable depende de \(\theta\) (ejemplo: \(X \sim U[0, \theta]\)), la función de densidad tiene una función indicadora: \(\mathbb{1}\{0 < x < \theta\}\).</p>
+        <p>Esto significa que la verosimilitud cae a 0 abruptamente si algún dato \(x_i\) es mayor que \(\theta\).</p>
+        
+        <strong>La Regla de Oro:</strong>
+        <ul>
+            <li>Si \(\theta\) está en el exponente o multiplicando \(\rightarrow\) <strong>DERIVA</strong>.</li>
+            <li>Si \(\theta\) es el límite del rango (el borde) \(\rightarrow\) <strong>NO DERIVES</strong>. Usa lógica.</li>
+        </ul>
+        
+        <p><strong>Ejemplo Uniforme \([0, \theta]\):</strong> Para que la probabilidad no sea cero, \(\theta\) tiene que ser más grande que todos tus datos. Para maximizar la densidad (que es \(1/\theta^n\)), quieres el \(\theta\) más pequeño posible que aún cubra los datos.</p>
+        $$\hat{\theta} = \max(x_1, \dots, x_n)$$
+    </div>
+
+    <h2>4. Propiedades y "Superpoderes"</h2>
+    
+    <div class="box theory-box">
+        <h3><i class="fas fa-magic"></i> Invariancia (El As bajo la manga)</h3>
+        <p>Este es el truco para resolver preguntas difíciles sin trabajar de más.</p>
+        <p><strong>Teorema:</strong> Si \(\hat{\theta}\) es el EMV de \(\theta\), entonces el EMV de cualquier función \(g(\theta)\) es simplemente \(g(\hat{\theta})\).</p>
+        
+        <p><strong>Ejemplo Práctico:</strong></p>
+        <ul>
+            <li>Calculaste que \(\hat{\theta} = \bar{X}\) (promedio).</li>
+            <li>Te piden estimar \(e^{\theta^2}\).</li>
+            <li><strong>Respuesta:</strong> No vuelvas a derivar. El estimador es \(e^{(\bar{X})^2}\).</li>
+        </ul>
+    </div>
+
+    <div class="box theory-box">
+        <h3><i class="fas fa-infinity"></i> Consistencia (Ley de los Grandes Números)</h3>
+        <p>A medida que tienes más y más datos (\(n \to \infty\)), tu estimador \(\hat{\theta}\) se acerca al valor verdadero \(\theta\). Si tienes infinitos datos, el EMV es perfecto.</p>
+    </div>
+
+    <h2>5. Ejemplo "Hola Mundo": Bernoulli</h2>
+    <div class="box practice-box">
+        <p>Lanzas una moneda \(n\) veces. Sale Cara (1) o Cruz (0). Probabilidad de cara es \(p\). ¿Cómo estimamos \(p\)?</p>
+        
+        <ol>
+            <li><strong>Densidad:</strong> \(f(x) = p^x (1-p)^{1-x}\)</li>
+            <li><strong>Verosimilitud (Producto):</strong>
+                $$L(p) = \prod p^{x_i} (1-p)^{1-x_i} = p^{\sum x_i} (1-p)^{n - \sum x_i}$$
+            </li>
+            <li><strong>Logaritmo:</strong>
+                $$\ell(p) = (\sum x_i) \ln(p) + (n - \sum x_i) \ln(1-p)$$
+            </li>
+            <li><strong>Derivada = 0:</strong>
+                $$\frac{\sum x_i}{p} - \frac{n - \sum x_i}{1-p} = 0$$
+            </li>
+            <li><strong>Despeje:</strong>
+                Pasando términos y operando, llegas a:
+                $$\hat{p} = \frac{\sum x_i}{n} = \bar{X}$$
+            </li>
+        </ol>
+        <p><strong>Conclusión Lógica:</strong> El mejor estimador de la probabilidad de cara es... ¡el porcentaje de caras que salieron en la muestra! (El promedio). El EMV confirma el sentido común.</p>
+    </div>
+
+</body>
+</html>

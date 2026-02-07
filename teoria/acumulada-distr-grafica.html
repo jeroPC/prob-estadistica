@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Maestro: Variables Aleatorias y Transformaciones</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8e44ad; /* Morado: Teoria */
+            --secondary: #2c3e50; /* Oscuro */
+            --success: #27ae60; /* Verde: Tips */
+            --danger: #c0392b; /* Rojo: Alertas */
+            --info: #2980b9; /* Azul: Info */
+            --bg: #f4f7f6;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: var(--bg);
+        }
+        h1 { text-align: center; color: var(--secondary); margin-bottom: 40px; border-bottom: 3px solid var(--primary); padding-bottom: 10px; }
+        h2 { color: var(--info); margin-top: 40px; display: flex; align-items: center; gap: 10px; }
+        
+        /* Tarjetas de Concepto */
+        .concept-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--secondary);
+        }
+
+        /* Tablas Comparativas */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .comparison-table th { background-color: var(--secondary); color: white; }
+        .comparison-table tr:nth-child(even) { background-color: #f9f9f9; }
+
+        /* Algoritmo Paso a Paso */
+        .algorithm-step {
+            background: #fff;
+            border-left: 5px solid var(--primary);
+            padding: 15px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .step-badge {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-right: 10px;
+        }
+
+        /* Cajas de Alerta y Tips */
+        .alert-box {
+            background-color: #fdedec;
+            border: 1px solid #fadbd8;
+            color: var(--danger);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+        .tip-box {
+            background-color: #d5f5e3;
+            border: 1px solid #abebc6;
+            color: var(--success);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        /* Gráficos SVG Simples */
+        .mini-graph {
+            display: block;
+            margin: 10px auto;
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1><i class="fas fa-book-open"></i> Variables Aleatorias: La Guía Definitiva</h1>
+    <p style="text-align: center; font-size: 1.1em; color: #666;">
+        Densidad vs Acumulada, Gráficos y el Arte de Transformar Variables.
+    </p>
+
+    <h2><i class="fas fa-balance-scale"></i> 1. Densidad (pdf) vs. Acumulada (CDF)</h2>
+    
+    <div class="concept-card" style="border-top-color: var(--info);">
+        <p>Esta es la confusión número 1. Hay que tenerlo claro como el agua:</p>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th width="15%">Característica</th>
+                    <th width="42%">Función de Densidad \(f(x)\)</th>
+                    <th width="43%">Función Acumulada \(F(x)\)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>¿Qué es?</strong></td>
+                    <td>Es la "velocidad" con la que se acumula probabilidad. Indica dónde hay más concentración de datos.</td>
+                    <td>Es la "mochila". Te dice cuánta probabilidad juntaste desde \(-\infty\) hasta \(x\).</td>
+                </tr>
+                <tr>
+                    <td><strong>Propiedad Clave</strong></td>
+                    <td>El <strong>Área bajo la curva</strong> total vale 1.</td>
+                    <td>El <strong>Valor final</strong> (altura) es 1.</td>
+                </tr>
+                <tr>
+                    <td><strong>Rango de valores</strong></td>
+                    <td>Puede valer cualquier cosa positiva (incluso > 1).</td>
+                    <td>SIEMPRE entre 0 y 1.</td>
+                </tr>
+                <tr>
+                    <td><strong>Relación</strong></td>
+                    <td>Es la <strong>Derivada</strong> de \(F(x)\).</td>
+                    <td>Es la <strong>Integral</strong> de \(f(x)\).</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2><i class="fas fa-chart-line"></i> 2. Cómo Graficar sin Miedo</h2>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        
+        <div class="concept-card" style="flex: 1; min-width: 300px;">
+            <h3>Graficando Densidad \(f(x)\)</h3>
+            <p>Piensa en una montaña.</p>
+            <ul>
+                <li><strong>Suelo:</strong> Nunca puede ser negativa (bajo el eje X).</li>
+                <li><strong>Altura:</strong> Donde la curva es más alta, es "más probable" encontrar valores cerca.</li>
+                <li><strong>Ceros:</strong> Fuera del rango posible, vale 0.</li>
+            </ul>
+            <div class="tip-box">
+                <i class="fas fa-lightbulb"></i> Tip: Si integras mentalmente la curva, te tiene que dar 1.
+            </div>
+        </div>
+
+        <div class="concept-card" style="flex: 1; min-width: 300px;">
+            <h3>Graficando Acumulada \(F(x)\)</h3>
+            <p>Piensa en subir una escalera o rampa.</p>
+            <ul>
+                <li><strong>Inicio:</strong> SIEMPRE empieza en altura 0 (a la izquierda).</li>
+                <li><strong>Fin:</strong> SIEMPRE termina en altura 1 (a la derecha).</li>
+                <li><strong>Crecimiento:</strong> NUNCA baja. Solo puede subir o quedarse plana.</li>
+                <li><strong>Continuidad:</strong> En variables continuas, no tiene saltos (es una línea continua).</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2><i class="fas fa-cogs"></i> 3. Transformación de Variables (\(X \to Y\))</h2>
+    
+    <div class="concept-card" style="border-top-color: var(--primary);">
+        <h3>El Método Mecánico (Paso a Paso)</h3>
+        <p>Tienes \(X\) conocida y te inventan una \(Y = g(X)\) (ej: \(Y = \ln X\), \(Y = X^2\)). Quieres hallar \(F_Y(y)\).</p>
+        <p>Este es el <strong>algoritmo infalible</strong> para no equivocarse:</p>
+
+        <div class="algorithm-step">
+            <span class="step-badge">PASO 1</span> <strong>Escribe la definición</strong><br>
+            Empieza siempre escribiendo esto:
+            $$F_Y(y) = P(Y \leq y)$$
+        </div>
+
+        <div class="algorithm-step">
+            <span class="step-badge">PASO 2</span> <strong>Sustituye la Y</strong><br>
+            Pon la fórmula que te dieron en lugar de la Y:
+            $$P(g(X) \leq y)$$
+            <em>Ejemplo: \(P(\ln(X) \leq y)\)</em>
+        </div>
+
+        <div class="algorithm-step">
+            <span class="step-badge">PASO 3 (CRÍTICO)</span> <strong>Despeja la X</strong><br>
+            Tienes que dejar a la X sola. Aquí es donde ocurren el 90% de los errores.
+            
+            <div class="alert-box">
+                <i class="fas fa-exclamation-triangle"></i> <strong>¡ALERTA DE DESIGUALDAD!</strong><br>
+                <ul>
+                    <li>Si aplicas una función <strong>CRECIENTE</strong> (suma, exp, ln, multiplicar por positivo) \(\rightarrow\) El signo \(\leq\) se mantiene.</li>
+                    <li>Si aplicas una función <strong>DECRECIENTE</strong> (\(1/x\), multiplicar por negativo) \(\rightarrow\) El signo <strong>SE INVIERTE</strong> a \(\geq\).</li>
+                    <li>Si elevas al cuadrado (\(X^2\)) \(\rightarrow\) Ojo, suele quedar \(|X| \leq \sqrt{y}\), lo que es \(-\sqrt{y} \leq X \leq \sqrt{y}\).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="algorithm-step">
+            <span class="step-badge">PASO 4</span> <strong>Reconoce a \(F_X\)</strong><br>
+            Si te quedó \(P(X \leq \text{algo})\), ¡felicidades! Eso es \(F_X(\text{algo})\).<br>
+            Si te quedó \(P(X > \text{algo})\) (por inversión), usa el complemento: \(1 - F_X(\text{algo})\).
+        </div>
+
+        <div class="algorithm-step">
+            <span class="step-badge">PASO 5</span> <strong>Analiza el Dominio (Soporte)</strong><br>
+            Pregúntate: "¿Si \(X\) va de [a, b], de dónde a dónde va \(Y\)?"<br>
+            <em>Ejemplo: Si \(X > 2\), entonces \(\ln(X) > \ln(2)\). Tu nueva función vale 0 antes de \(\ln(2)\).</em>
+        </div>
+    </div>
+
+    <h2><i class="fas fa-laptop-code"></i> 4. Analogía para Ingenieros (Devs)</h2>
+    <div class="concept-card" style="background: #2c3e50; color: white;">
+        <p>Como estudias ingeniería informática, velo así:</p>
+        <ul>
+            <li><strong>La Variable Aleatoria (X):</strong> Es una función que retorna un `float`. No sabes qué valor va a dar, pero sabes su comportamiento.</li>
+            <li><strong>La PDF (Densidad):</strong> Es un <code>Histograma</code> con ancho de barra infinito (infinitesimal).</li>
+            <li><strong>La CDF (Acumulada):</strong> Es un bucle <code>for</code> que va sumando probabilidades:
+<pre style="background: #1a252f; padding: 10px; border-radius: 5px; color: #ecf0f1; margin-top: 5px;">
+acumulado = 0;
+for (val = min; val <= x; val += step) {
+    acumulado += probabilidad(val);
+}
+return acumulado; // Esto es F(x)
+</pre>
+            </li>
+            <li><strong>Transformar (X a Y):</strong> Es simplemente hacer un <code>map()</code> sobre los datos. Si mapeas los datos, cambias el rango (el dominio), y por ende, cambias la función de distribución.</li>
+        </ul>
+    </div>
+
+</body>
+</html>

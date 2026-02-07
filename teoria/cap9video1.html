@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inferencia Estadística: Guía Maestra (Video Completo)</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #0f172a;       /* Azul oscuro elegante */
+            --accent: #3b82f6;        /* Azul brillante para énfasis */
+            --bg: #f1f5f9;            /* Gris muy claro de fondo */
+            --paper: #ffffff;         /* Blanco papel */
+            --text: #334155;          /* Texto gris oscuro */
+            --code-bg: #f8fafc;
+            --border: #e2e8f0;
+            --highlight: #dbeafe;     /* Fondo azul suave */
+            --warning-bg: #fffbeb;    /* Fondo amarillo suave */
+            --warning-border: #fcd34d;
+            --success-bg: #f0fdf4;
+            --success-border: #86efac;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--paper);
+            padding: 60px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        /* Títulos */
+        h1 {
+            color: var(--primary);
+            font-size: 2.5em;
+            border-bottom: 4px solid var(--accent);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 60px;
+            font-size: 1.8em;
+            border-left: 6px solid var(--accent);
+            padding-left: 20px;
+            background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%);
+        }
+
+        h3 {
+            color: #475569;
+            font-weight: 600;
+            margin-top: 30px;
+        }
+
+        /* Bloques Especiales */
+        .essential-diff {
+            background-color: var(--highlight);
+            border: 2px solid #bfdbfe;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .mental-model {
+            background-color: var(--warning-bg);
+            border: 2px dashed var(--warning-border);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .math-block {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        /* Tablas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        th { background-color: var(--primary); color: white; padding: 15px; text-align: left; }
+        td { border: 1px solid var(--border); padding: 15px; vertical-align: top; }
+
+        /* Utilitarios */
+        .tag {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .timestamp {
+            color: #64748b;
+            font-size: 0.9em;
+            font-family: monospace;
+            float: right;
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Inferencia Estadística: De los Datos al Modelo</h1>
+    <p>Explicación profunda y corregida de todos los conceptos del video, estructurada para el aprendizaje riguroso.</p>
+
+    <h2>1. El Cambio de Paradigma <span class="timestamp">[00:00]</span></h2>
+    
+    <div class="mental-model">
+        <h3>Modelo Mental: El Velo de la Ignorancia</h3>
+        Imagine una caja negra llamada "La Realidad".
+        <ul>
+            <li><strong>Probabilidad:</strong> Abres la caja, ves cómo funciona el mecanismo y predices qué saldrá.</li>
+            <li><strong>Estadística:</strong> La caja está cerrada con candado. Solo ves lo que sale de ella y tienes que hacer ingeniería inversa para dibujar los planos del mecanismo interno.</li>
+        </ul>
+    </div>
+
+    <table>
+        <tr>
+            <th>Probabilidad (Deductiva)</th>
+            <th>Estadística (Inductiva)</th>
+        </tr>
+        <tr>
+            <td><strong>Mundo Ideal → Mundo Real</strong></td>
+            <td><strong>Mundo Real → Mundo Ideal</strong></td>
+        </tr>
+        <tr>
+            <td>Conoces la <strong>Población</strong> (θ).</td>
+            <td>Desconoces la Población. Solo tienes una <strong>Muestra</strong> (x).</td>
+        </tr>
+        <tr>
+            <td>Calculas la probabilidad de los datos futuros.</td>
+            <td>Estimas el modelo que generó los datos pasados.</td>
+        </tr>
+    </table>
+
+    <h2>2. Muestra Aleatoria y Población <span class="timestamp">[01:28]</span></h2>
+    <p>Para hacer matemáticas con "la realidad", necesitamos formalizarla.</p>
+    
+    <ul>
+        <li><strong>Población:</strong> El universo total de posibles observaciones.</li>
+        <li><strong>Muestra Aleatoria (X₁, ..., Xₙ):</strong> Es el conjunto de datos que recolectamos. Para que las matemáticas funcionen, exigimos que sean <strong>i.i.d.</strong>:</li>
+    </ul>
+
+    <div class="math-block">
+        <strong>Independientes e Idénticamente Distribuidas (i.i.d.)</strong><br>
+        $$f(x_1, ..., x_n) = f(x_1) \cdot f(x_2) \cdot ... \cdot f(x_n) = \prod_{i=1}^n f(x_i)$$
+    </div>
+    <p><em>Traducción:</em> El resultado de la primera moneda no afecta a la segunda (Independiente) y usas la misma moneda ambas veces (Idéntica).</p>
+
+    <h2>3. Modelos Paramétricos <span class="timestamp">[05:40]</span></h2>
+    
+    <div class="essential-diff">
+        <h3>La Diferencia Esencial: Familia vs. Distribución</h3>
+        <p>Esta distinción es vital para entender qué estamos buscando.</p>
+        
+        <p><strong>1. Familia Paramétrica (La Estructura):</strong><br>
+        Es una colección infinita de posibles distribuciones. Es un "molde" flexible.<br>
+        <em>Ejemplo:</em> La familia Normal N(μ, σ²). Te dice "los datos tendrán forma de campana", pero no te dice dónde está la campana ni qué tan ancha es.</p>
+        
+        <p><strong>2. Distribución Específica (El Objeto):</strong><br>
+        Es un objeto matemático concreto y rígido. Ocurre cuando fijas el parámetro.<br>
+        <em>Ejemplo:</em> N(0, 1). Aquí ya sabes todo.</p>
+        
+        <p><strong>El Objetivo de la Estadística:</strong> Buscar dentro de la Familia Paramétrica cuál es la Distribución Específica que mejor se ajusta a tus datos.</p>
+    </div>
+
+    <h3>El Espacio Paramétrico (Θ)</h3>
+    <p>El conjunto de valores válidos para el parámetro. Definirlo mal es un error grave.</p>
+    <ul>
+        <li><strong>Bernoulli:</strong> Θ = [0, 1] (Porque una probabilidad no puede ser 1.5).</li>
+        <li><strong>Normal:</strong> Θ = {(μ, σ) : μ ∈ ℝ, σ > 0} (La varianza debe ser positiva).</li>
+    </ul>
+
+    <h3>Función de Verosimilitud (Likelihood)</h3>
+    <div class="math-block">
+        $$L(\theta) = \prod_{i=1}^n f(x_i | \theta)$$
+    </div>
+    <p>Matemáticamente es la densidad conjunta. Conceptualmente, interpretamos los datos x como fijos y variamos θ para ver qué valor maximiza la función.</p>
+
+    <h2>4. Clasificación de Familias <span class="timestamp">[11:43]</span></h2>
+
+    <h3>A. Familias Regulares (Soporte Independiente)</h3>
+    <p>El dominio de definición de x <strong>NO</strong> depende de θ.</p>
+    <ul>
+        <li><strong>Ejemplo:</strong> Exponencial (x > 0). El parámetro λ cambia la forma de la curva, pero la curva siempre empieza en 0.</li>
+        <li><strong>Ventaja:</strong> Podemos derivar L(θ) respecto a θ sin miedo.</li>
+    </ul>
+
+    <h3>B. Familias NO Regulares (Soporte Dependiente)</h3>
+    <p>El dominio de x <strong>SÍ</strong> depende de θ. El parámetro actúa como una pared física.</p>
+    
+    <div class="mental-model" style="border-color: #f87171; background-color: #fef2f2;">
+        <strong>Alerta de Error Común</strong><br>
+        En la distribución <strong>Uniforme (0, θ)</strong>:<br>
+        El dominio es 0 < x < θ.<br>
+        Si cambias θ, cambias el terreno posible donde pueden caer los datos.<br>
+        Esto rompe las derivadas estándar porque los límites de integración se mueven.
+    </div>
+
+    <h3>C. Familias Exponenciales <span class="timestamp">[12:50]</span></h3>
+    <p>Son familias "VIP" que permiten una factorización especial:</p>
+    <div class="math-block">
+        $$f(x|\theta) = a(\theta) \cdot b(x) \cdot \exp\left[ \sum c(\theta) R(x) \right]$$
+    </div>
+    <p>Si tu distribución es de este tipo (Normal, Bernoulli, Poisson, Gamma), hallar estadísticos suficientes es automático: solo sumas los términos R(x).</p>
+
+    <h2>5. Estadísticos <span class="timestamp">[19:30]</span></h2>
+    <p><strong>Definición:</strong> Cualquier función T(X) de la muestra que <strong>no depende</strong> de parámetros desconocidos.</p>
+    <ul>
+        <li>✓ Promedio muestral X̄ (Solo usas los datos).</li>
+        <li>✓ Máximo muestral max(Xᵢ) (Solo usas los datos).</li>
+        <li>✗ (X̄ - μ)/σ (No es estadístico si no conoces μ y σ).</li>
+    </ul>
+
+    <h2>6. Estadísticos Suficientes <span class="timestamp">[21:30]</span></h2>
+    <p>Es la idea central del video: Resumir los datos sin perder información sobre θ.</p>
+
+    <h3>Teorema de Factorización (Fisher-Neyman) <span class="timestamp">[27:45]</span></h3>
+    <p>Un estadístico T es suficiente si podemos romper la verosimilitud en dos bloques:</p>
+    <div class="math-block">
+        $$L(\theta) = \underbrace{g(T(x), \theta)}_{\text{Señal}} \cdot \underbrace{h(x)}_{\text{Ruido}}$$
+    </div>
+    
+    <h3>Análisis Profundo: El caso de la Uniforme (0, θ)</h3>
+    <p>Aquí corregimos la explicación para que sea matemáticamente impecable.</p>
+
+    <p><strong>La Verosimilitud:</strong></p>
+    <div class="math-block">
+        $$L(\theta) = \frac{1}{\theta^n} \cdot \prod_{i=1}^n \mathbb{I}_{(0, \theta)}(x_i)$$
+    </div>
+    <p>El término clave es el producto de las funciones indicadoras (ℐ).<br>
+    ℐ₍₀,θ₎(xᵢ) vale 1 si 0 < xᵢ < θ, y 0 en caso contrario.</p>
+    
+    <p><strong>El Paso Lógico:</strong></p>
+    <p>Para que el producto total sea 1 (y no 0), se requiere que <strong>TODOS</strong> los xᵢ sean menores que θ.<br>
+    Si todos son menores que θ, entonces forzosamente <strong>el más grande de ellos</strong> (x₍ₙ₎ o máximo) también debe ser menor que θ.</p>
+
+    <div class="math-block">
+        $$\prod_{i=1}^n \mathbb{I}(x_i < \theta) \iff \mathbb{I}(\max(x_1...x_n) < \theta)$$
+    </div>
+
+    <p><strong>La Factorización Final:</strong></p>
+    <div class="math-block">
+        $$L(\theta) = \underbrace{\frac{1}{\theta^n} \mathbb{I}_{(x_{(n)}, \infty)}(\theta)}_{g(T(x), \theta)} \cdot \underbrace{1}_{h(x)}$$
+    </div>
+    <p>Vemos que la parte que tiene θ depende EXCLUSIVAMENTE del Máximo (x₍ₙ₎). Por tanto, <strong>el Máximo es el Estadístico Suficiente</strong>.</p>
+    <p><em>Interpretación:</em> Si sabes el máximo, sabes exactamente dónde está la "pared" mínima posible para θ. Los datos pequeños no aportan info sobre el límite superior.</p>
+
+    <h2>7. Estimadores <span class="timestamp">[38:28]</span></h2>
+    <p>Finalmente, cerramos el ciclo.</p>
+    <ul>
+        <li><strong>Estadístico Suficiente:</strong> Resume la información (El archivo ZIP).</li>
+        <li><strong>Estimador:</strong> Es una regla o fórmula aplicada a ese resumen para proponer un valor concreto de θ.</li>
+    </ul>
+    <p><em>Ejemplo:</em> Para la Bernoulli, el estadístico suficiente es la suma de éxitos (Σxᵢ). El estimador de máxima verosimilitud para p es esa suma dividida por n (p̂ = X̄).</p>
+
+
+</div>
+
+</body>
+</html>
