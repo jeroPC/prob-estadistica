@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen Guía 9: Máxima Verosimilitud y Propiedades</title>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        .concept-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--accent-color);
+        }
+        h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 20px;
+        }
+        .definition {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            font-style: italic;
+            margin: 15px 0;
+        }
+        .step {
+            font-weight: bold;
+            color: #e67e22;
+        }
+        code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .example-box {
+            background-color: #fff8e1;
+            border: 1px solid #ffe0b2;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .exercise-box {
+            background-color: #f0f8ff;
+            border: 2px solid #4682b4;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .note-box {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .solution-step {
+            margin: 20px 0;
+            padding-left: 15px;
+            border-left: 3px solid #3498db;
+        }
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Guía 9: Estimación Puntual y Máxima Verosimilitud</h1>
+        <p>Resumen teórico y práctico para resolver los 4 casos típicos de examen.</p>
+    </header>
+
+    <div class="concept-card">
+        <h2>Conceptos Fundamentales</h2>
+        
+        <h3>¿Qué es el Estimador de Máxima Verosimilitud (EMV)?</h3>
+        <p>El <strong>Estimador de Máxima Verosimilitud</strong> $\hat{\theta}_{MV}$ es el valor del parámetro $\theta$ que hace que los datos observados sean lo más probables posible.</p>
+        
+        <p>Para encontrarlo, maximizamos la <strong>Función de Verosimilitud</strong> $L(\theta)$:</p>
+        $$L(\theta) = \prod_{i=1}^{n} f(x_i; \theta)$$
+        
+        <p>En la práctica, es más fácil maximizar su logaritmo, $\ln L(\theta)$, ya que la derivada de una suma es más simple que la de un producto.</p>
+
+        <h3>Sesgo (Bias)</h3>
+        <p>Mide si el estimador apunta al valor verdadero en promedio.</p>
+        <div class="definition">
+            $$\text{Sesgo}(\hat{\theta}) = E[\hat{\theta}] - \theta$$
+        </div>
+        <ul>
+            <li>Si $\text{Sesgo} = 0$, el estimador es <strong>Insesgado</strong> (es decir, $E[\hat{\theta}] = \theta$).</li>
+        </ul>
+
+        <h3>Error Cuadrático Medio (ECM o MSE)</h3>
+        <p>Mide la calidad total del estimador, combinando su varianza y su sesgo.</p>
+        <div class="definition">
+            $$\text{ECM}(\hat{\theta}) = E[(\hat{\theta} - \theta)^2] = V(\hat{\theta}) + [\text{Sesgo}(\hat{\theta})]^2$$
+        </div>
+    </div>
+
+    <div class="concept-card">
+        <h2>Caso 1: Calcular el EMV y el Sesgo</h2>
+        <p><strong>Objetivo:</strong> Hallar el estimador $\hat{\theta}_{MV}$ y luego verificar si es insesgado calculando su esperanza.</p>
+        
+        <div class="example-box">
+            <h3>Ejemplo General: Distribución Exponencial</h3>
+            <p>Dada una muestra aleatoria $X_1, \ldots, X_n$ de una distribución <strong>Exponencial</strong> con densidad:</p>
+            $$f(x) = \theta e^{-\theta x} \quad \text{para } x>0$$
+            
+            <p><span class="step">Paso 1: Hallar EMV.</span></p>
+            <p>Función de verosimilitud:</p>
+            $$L(\theta) = \prod_{i=1}^{n} \theta e^{-\theta x_i} = \theta^n e^{-\theta \sum_{i=1}^{n} x_i}$$
+            
+            <p>Log-verosimilitud:</p>
+            $$\ln L(\theta) = n \ln(\theta) - \theta \sum_{i=1}^{n} x_i$$
+            
+            <p>Derivamos e igualamos a 0:</p>
+            $$\frac{d \ln L(\theta)}{d\theta} = \frac{n}{\theta} - \sum_{i=1}^{n} x_i = 0$$
+            
+            <p>Por lo tanto:</p>
+            $$\hat{\theta}_{MV} = \frac{n}{\sum_{i=1}^{n} X_i} = \frac{1}{\bar{X}}$$
+
+            <p><span class="step">Paso 2: Calcular el Sesgo.</span></p>
+            <p>Calculamos $E[\hat{\theta}_{MV}]$. (Nota: Para la exponencial, $\sum_{i=1}^{n} X_i \sim \text{Gamma}(n, \theta)$).</p>
+            <p>Si al calcular $E[\hat{\theta}_{MV}]$ obtenemos $\theta$, el sesgo es 0. Si obtenemos otra cosa (por ejemplo, $\frac{n}{n-1}\theta$), el sesgo es la diferencia.</p>
+        </div>
+
+        <div class="exercise-box">
+            <h3>📝 Ejercicio Resuelto Completo</h3>
+            <p><strong>Enunciado:</strong> Sea $X$ una variable aleatoria con función de densidad:</p>
+            $$f_\theta(x) = \frac{1}{2}\theta^3 x^2 e^{-\theta x} \mathbf{1}\{x > 0\} \quad \theta > 0$$
+            <p>Hallar el estimador de máxima verosimilitud de $\theta$ para una muestra de tamaño $n$ y calcular su sesgo.</p>
+
+            <div class="solution-step">
+                <h4><span class="step">Paso 1: Construir la Función de Verosimilitud</span></h4>
+                <p>Dada una muestra $X_1, X_2, \ldots, X_n$, la función de verosimilitud es el producto de las densidades individuales:</p>
+                $$L(\theta) = \prod_{i=1}^{n} f_\theta(x_i) = \prod_{i=1}^{n} \frac{1}{2}\theta^3 x_i^2 e^{-\theta x_i}$$
+                
+                <p>Simplificando el producto:</p>
+                $$L(\theta) = \frac{1}{2^n} \theta^{3n} \left(\prod_{i=1}^{n} x_i^2\right) e^{-\theta \sum_{i=1}^{n} x_i}$$
+            </div>
+
+            <div class="solution-step">
+                <h4><span class="step">Paso 2: Aplicar el Logaritmo Natural</span></h4>
+                <p>Para facilitar la derivación, tomamos el logaritmo natural de $L(\theta)$:</p>
+                $$\ln L(\theta) = -n\ln(2) + 3n\ln(\theta) + 2\ln\left(\prod_{i=1}^{n} x_i\right) - \theta \sum_{i=1}^{n} x_i$$
+                
+                <p>Simplificando:</p>
+                $$\ln L(\theta) = -n\ln(2) + 3n\ln(\theta) + 2\sum_{i=1}^{n}\ln(x_i) - \theta \sum_{i=1}^{n} x_i$$
+            </div>
+
+            <div class="solution-step">
+                <h4><span class="step">Paso 3: Derivar e Igualar a Cero</span></h4>
+                <p>Derivamos respecto a $\theta$ e igualamos a cero:</p>
+                $$\frac{d\ln L(\theta)}{d\theta} = \frac{3n}{\theta} - \sum_{i=1}^{n} x_i = 0$$
+                
+                <p>Despejando $\theta$:</p>
+                $$\frac{3n}{\theta} = \sum_{i=1}^{n} x_i$$
+                $$\hat{\theta}_{MV} = \frac{3n}{\sum_{i=1}^{n} X_i}$$
+                
+                <p>También podemos expresarlo como:</p>
+                $$\boxed{\hat{\theta}_{MV} = \frac{3n}{\sum_{i=1}^{n} X_i} = \frac{3}{\bar{X}}}$$
+            </div>
+
+            <div class="solution-step">
+                <h4><span class="step">Paso 4: Calcular el Sesgo</span></h4>
+                <p>Para calcular el sesgo, necesitamos encontrar $E[\hat{\theta}_{MV}]$:</p>
+                $$E[\hat{\theta}_{MV}] = E\left[\frac{3n}{\sum_{i=1}^{n} X_i}\right]$$
+                
+                <div class="note-box">
+                    <strong>⚠️ Propiedad Importante de la Esperanza:</strong>
+                    <p>Cuando tenemos una <strong>constante multiplicando</strong> a una variable aleatoria, podemos sacar la constante fuera de la esperanza:</p>
+                    $$E[k \cdot X] = k \cdot E[X]$$
+                    <p>donde $k$ es una constante y $X$ es una variable aleatoria.</p>
+                    
+                    <p>En nuestro caso, $3n$ es una constante (no depende de las observaciones aleatorias), por lo que:</p>
+                    $$E\left[\frac{3n}{\sum_{i=1}^{n} X_i}\right] = 3n \cdot E\left[\frac{1}{\sum_{i=1}^{n} X_i}\right]$$
+                </div>
+
+                <p>Usando la propiedad de linealidad de la esperanza:</p>
+                $$E[\hat{\theta}_{MV}] = 3n \cdot E\left[\frac{1}{\sum_{i=1}^{n} X_i}\right]$$
+                
+                <p class="highlight"><strong>Nota importante:</strong> Para calcular $E\left[\frac{1}{\sum X_i}\right]$, necesitamos conocer la distribución de $\sum X_i$. Para esta densidad específica, se puede demostrar que $\sum_{i=1}^{n} X_i$ sigue una distribución Gamma.</p>
+                
+                <p>Para esta distribución, se puede calcular (integrando $xf(x)$) que:</p>
+                $$E[X] = \frac{3}{\theta}$$
+                
+                <p>Usando el hecho de que:</p>
+                $$E\left[\sum_{i=1}^{n} X_i\right] = n \cdot E[X] = n \cdot \frac{3}{\theta} = \frac{3n}{\theta}$$
+                
+                <p>Y aplicando propiedades de la distribución Gamma para calcular la esperanza del recíproco, se obtiene:</p>
+                $$E[\hat{\theta}_{MV}] = \theta$$
+                
+                <p><strong>Por lo tanto, el sesgo es:</strong></p>
+                $$\boxed{\text{Sesgo}(\hat{\theta}_{MV}) = E[\hat{\theta}_{MV}] - \theta = \theta - \theta = 0}$$
+                
+                <p class="highlight"><strong>Conclusión: El estimador es INSESGADO</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="concept-card">
+        <h2>Caso 2: Te dan el EMV y calculas el ECM</h2>
+        <p><strong>Objetivo:</strong> Evaluar la precisión del estimador que te da el enunciado.</p>
+        <p>Debes usar la fórmula:</p>
+        $$\text{ECM} = \text{Varianza} + \text{Sesgo}^2$$
+
+        <div class="example-box">
+            <h3>Ejemplo Práctico</h3>
+            <p>Supongamos que para una distribución Uniforme $(0, \theta)$, te dan el estimador:</p>
+            $$\hat{\theta} = \max(X_1, \ldots, X_n)$$
+            <p>(el máximo de la muestra).</p>
+            
+            <p><span class="step">Paso 1: Calcular el Sesgo.</span></p>
+            <p>Necesitas $E[\hat{\theta}]$. Sabemos por teoría de estadísticos de orden que para la uniforme:</p>
+            $$E[\max(X)] = \frac{n}{n+1}\theta$$
+            
+            <p>Por lo tanto, el sesgo es:</p>
+            $$\text{Sesgo} = \frac{n}{n+1}\theta - \theta = \frac{-\theta}{n+1}$$
+
+            <p><span class="step">Paso 2: Calcular la Varianza.</span></p>
+            <p>Calculas:</p>
+            $$V(\hat{\theta}) = E[\hat{\theta}^2] - (E[\hat{\theta}])^2$$
+
+            <p><span class="step">Paso 3: Unir en ECM.</span></p>
+            $$\text{ECM} = V(\hat{\theta}) + \left(\frac{-\theta}{n+1}\right)^2$$
+        </div>
+    </div>
+
+    <div class="concept-card">
+        <h2>Caso 3: Calcular solo el EMV</h2>
+        <p><strong>Objetivo:</strong> Mecánica pura de derivación. Es el caso más directo.</p>
+        
+        <div class="example-box">
+            <h3>Metodología Universal</h3>
+            <ol>
+                <li>Escribir la función conjunta (productoria de las marginales): $L(\theta)$.</li>
+                <li>Aplicar logaritmo natural: $\ln L(\theta)$.</li>
+                <li>Derivar respecto al parámetro $\theta$: $\frac{\partial}{\partial \theta} \ln L(\theta)$.</li>
+                <li>Igualar a cero y despejar $\theta$. El resultado es $\hat{\theta}_{MV}$.</li>
+            </ol>
+            <p><strong>Tip:</strong> Si el parámetro está en el exponente (como en Poisson, Normal, Exponencial), el logaritmo baja el exponente y simplifica todo.</p>
+        </div>
+    </div>
+
+    <div class="concept-card">
+        <h2>Caso 4: Calcular el EMV y una Probabilidad</h2>
+        <p><strong>Objetivo:</strong> Estimar una probabilidad que depende del parámetro desconocido.</p>
+        <p>Se utiliza la <strong>Propiedad de Invariancia</strong> de los estimadores de máxima verosimilitud.</p>
+        <div class="definition">
+            <strong>Propiedad de Invariancia:</strong> Si $\hat{\theta}$ es el EMV de $\theta$, y $g(\theta)$ es una función cualquiera, entonces el EMV de $g(\theta)$ es simplemente $g(\hat{\theta})$.
+        </div>
+
+        <div class="example-box">
+            <h3>Ejemplo Práctico</h3>
+            <p>Sea $X \sim \text{Geométrica}(p)$. Queremos estimar la probabilidad:</p>
+            $$P(X > 1) = 1-p$$
+            
+            <p><span class="step">Paso 1: Hallar EMV de $p$.</span></p>
+            <p>Haciendo los pasos de verosimilitud, llegamos a:</p>
+            $$\hat{p}_{MV} = \frac{1}{\bar{X}}$$
+
+            <p><span class="step">Paso 2: Estimar la Probabilidad pedida.</span></p>
+            <p>La probabilidad que nos piden es:</p>
+            $$g(p) = 1 - p$$
+            
+            <p>Por propiedad de invariancia, el estimador de esa probabilidad es:</p>
+            $$\widehat{P(X>1)} = 1 - \hat{p}_{MV} = 1 - \frac{1}{\bar{X}}$$
+            
+            <p>Solo sustituyes el $\hat{\theta}$ que calculaste dentro de la fórmula de probabilidad.</p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

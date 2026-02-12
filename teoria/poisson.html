@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen Poisson: Coloreo, Superposición y Competencia</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #880e4f;
+            --accent-color: #bc477b;
+            --bg-color: #fdfbf7;
+            --card-bg: #ffffff;
+            --text-color: #212121;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+        }
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+        .concept-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+            position: relative;
+        }
+        .concept-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: var(--accent-color);
+            margin-top: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        h4 {
+            color: var(--accent-color);
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .formula-box {
+            background-color: #fce4ec;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            border: 1px dashed var(--accent-color);
+        }
+        .example-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px 20px;
+            margin-top: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+        .example-box ul {
+            margin: 10px 0;
+        }
+        .note {
+            font-style: italic;
+            color: #555;
+            font-size: 0.95em;
+            margin: 15px 0;
+        }
+        strong {
+            color: var(--primary-color);
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        p {
+            margin: 12px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Propiedades del Proceso de Poisson</h1>
+        <p class="subtitle">Guía teórica basada en tus notas: Coloreo, Superposición y Competencia</p>
+    </header>
+
+    <div class="concept-card">
+        <span class="concept-badge">División</span>
+        <h2>1. Coloreo (Thinning)</h2>
+        <p>También conocido como <em>Descomposición</em> o <em>Adelgazamiento</em>. Ocurre cuando tienes un flujo principal de eventos y clasificas cada evento en uno de varios tipos (por ejemplo, Tipo A y Tipo B) de forma independiente.</p>
+
+        <h3>La Teoría</h3>
+        <p>Si tienes un Proceso de Poisson original con tasa \(\lambda_{tot}\) y cada evento se clasifica independientemente como:</p>
+        <ul>
+            <li><strong>Tipo A:</strong> con probabilidad \(P_A\)</li>
+            <li><strong>Tipo B:</strong> con probabilidad \(P_B\) (donde \(P_A + P_B = 1\))</li>
+        </ul>
+        <p>Entonces, los eventos de Tipo A y Tipo B forman <strong>dos Procesos de Poisson INDEPENDIENTES</strong>.</p>
+
+        <div class="formula-box">
+            \[ N_A \sim \text{Poisson}(\lambda_A = \lambda_{tot} \cdot P_A) \]
+            \[ N_B \sim \text{Poisson}(\lambda_B = \lambda_{tot} \cdot P_B) \]
+        </div>
+
+        <p class="note"><strong>Clave:</strong> Aunque provienen de la misma fuente, una vez separados, saber cuántos eventos de Tipo A ocurrieron no te da información sobre cuántos de Tipo B ocurrieron (debido a la propiedad de independencia de Poisson).</p>
+
+        <div class="example-box">
+            <h4>Ejemplo Práctico</h4>
+            <p>A una tienda entran clientes a una tasa de \(\lambda_{tot} = 10\) clientes/hora.</p>
+            <ul>
+                <li>El 30% paga con efectivo (\(P_A = 0.3\)).</li>
+                <li>El 70% paga con tarjeta (\(P_B = 0.7\)).</li>
+            </ul>
+            <p><strong>Resultado:</strong> El proceso de "pagos en efectivo" es una Poisson con tasa \(\lambda = 10 \times 0.3 = 3\). El proceso de "pagos con tarjeta" es una Poisson con tasa \(\lambda = 10 \times 0.7 = 7\).</p>
+        </div>
+    </div>
+
+    <div class="concept-card">
+        <span class="concept-badge">Suma</span>
+        <h2>2. Superposición</h2>
+        <p>Es el proceso inverso al coloreo. Ocurre cuando tienes varios flujos independientes de eventos y los juntas en uno solo.</p>
+
+        <h3>La Teoría</h3>
+        <p>Si tienes dos procesos de Poisson independientes:</p>
+        <ul>
+            <li>Proceso A con tasa \(\lambda_A\)</li>
+            <li>Proceso B con tasa \(\lambda_B\)</li>
+        </ul>
+        <p>La suma de ambos (el proceso total) sigue siendo un Proceso de Poisson.</p>
+
+        <div class="formula-box">
+            \[ N_{tot} \sim \text{Poisson}(\lambda_{tot} = \lambda_A + \lambda_B) \]
+        </div>
+
+        <p class="note">Esto es fundamental porque la suma de variables Poisson independientes es otra Poisson.</p>
+
+        <div class="example-box">
+            <h4>Ejemplo Práctico</h4>
+            <p>En un servidor web:</p>
+            <ul>
+                <li>Llegan solicitudes desde Europa con tasa \(\lambda_A = 5\) req/min.</li>
+                <li>Llegan solicitudes desde América con tasa \(\lambda_B = 8\) req/min.</li>
+            </ul>
+            <p><strong>Resultado:</strong> El servidor ve un único flujo de solicitudes totales con una tasa de \(\lambda_{tot} = 5 + 8 = 13\) req/min.</p>
+        </div>
+    </div>
+
+    <div class="concept-card">
+        <span class="concept-badge">Probabilidad</span>
+        <h2>3. Competencia (¿Quién gana?)</h2>
+        <p>En tus notas aparece como \(P(\text{gane } A)\). Esto responde a la pregunta: <em>"Dado que estoy esperando el próximo evento, ¿cuál es la probabilidad de que venga del proceso A y no del B?"</em>.</p>
+
+        <h3>La Teoría</h3>
+        <p>Recordemos que el tiempo entre eventos en un proceso Poisson se distribuye Exponencialmente (\(T \sim \text{Exp}(\lambda)\)). Estamos comparando dos variables exponenciales \(T_A\) y \(T_B\).</p>
+        <p>La probabilidad de que el evento A ocurra antes que el evento B es proporcional a su tasa relativa.</p>
+
+        <div class="formula-box">
+            \[ P(\text{Gana } A) = P(T_A < T_B) = \frac{\lambda_A}{\lambda_A + \lambda_B} \]
+            \[ P(\text{Gana } B) = P(T_B < T_A) = \frac{\lambda_B}{\lambda_A + \lambda_B} \]
+        </div>
+
+        <h3>Propiedad Adicional: El tiempo mínimo</h3>
+        <p>El tiempo que tardas en ver el <strong>primer</strong> evento (ya sea de A o de B) es el mínimo de las exponenciales:</p>
+        <div class="formula-box">
+            \[ T_{min} = \min(T_A, T_B) \sim \text{Exp}(\lambda_A + \lambda_B) \]
+        </div>
+
+        <div class="example-box">
+            <h4>Ejemplo Práctico</h4>
+            <p>Estás en una parada de colectivos. Pasan dos líneas:</p>
+            <ul>
+                <li>Línea 102 (\(\lambda_A = 4\) por hora).</li>
+                <li>Línea 118 (\(\lambda_B = 6\) por hora).</li>
+            </ul>
+            <p><strong>Pregunta:</strong> ¿Cuál es la probabilidad de que el primer colectivo que veas sea el 102?</p>
+            <div class="formula-box">
+                \[ P(\text{ver 102 primero}) = \frac{4}{4+6} = \frac{4}{10} = 0.4 \text{ (40%)} \]
+            </div>
+            <p>Lógicamente, como el 118 tiene mayor frecuencia, es más probable que llegue primero (60%).</p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

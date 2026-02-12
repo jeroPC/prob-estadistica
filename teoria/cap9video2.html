@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Maestra: Máxima Verosimilitud y Estimación</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --code-bg: #1e1e1e;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: var(--surface);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            color: #0f172a;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; border-bottom: 4px solid var(--primary); padding-bottom: 10px; }
+        h2 { font-size: 1.8rem; margin-top: 3rem; border-left: 5px solid var(--primary); padding-left: 15px; }
+        h3 { font-size: 1.3rem; margin-top: 2rem; color: var(--primary-dark); }
+        p { margin-bottom: 1.5rem; }
+
+        /* Code & Math */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #e11d48;
+        }
+        
+        .math-block {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        /* Components */
+        .note {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning {
+            background-color: #fffbeb;
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        /* Interactive Exercises */
+        details {
+            background: #fdfdfd;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 15px 0;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        details[open] {
+            background: #f0fdf4;
+            border-color: var(--success);
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 600;
+            padding: 10px;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        summary::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+
+        details[open] summary::after {
+            content: '-';
+            color: var(--success);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .badge-theory { background: #dbeafe; color: var(--primary); }
+        .badge-practice { background: #dcfce7; color: var(--success); }
+
+        /* Navigation */
+        .toc {
+            background: #1e293b;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        .toc a { color: #94a3b8; text-decoration: none; display: block; margin: 5px 0; transition: 0.2s;}
+        .toc a:hover { color: white; padding-left: 5px; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <span class="badge badge-theory">Capítulo 9 - Video 2</span>
+        <h1>Estimación Puntual y Máxima Verosimilitud</h1>
+        <p>Una guía completa basada en la cátedra de Probabilidad de FIUBA. Desde la teoría base hasta la bondad de los estimadores.</p>
+    </header>
+
+    <div class="toc">
+        <h3>📚 Tabla de Contenidos</h3>
+        <a href="#intro">1. Introducción: El Cambio de Paradigma</a>
+        <a href="#emv">2. El Método de Máxima Verosimilitud (EMV)</a>
+        <a href="#ejemplos">3. Ejemplos Clave (Bernoulli y Uniforme)</a>
+        <a href="#bondad">4. Bondad de los Estimadores (Propiedades)</a>
+        <a href="#ecm">5. El Error Cuadrático Medio (ECM)</a>
+        <a href="#invariancia">6. Invariancia y Nuevas Distribuciones</a>
+        <a href="#ejercicios">7. Ejercicios Resueltos</a>
+    </div>
+
+    <section id="intro">
+        <h2>1. El Cambio de Paradigma: De Deducción a Inferencia</h2>
+        <p>Hasta ahora, en Probabilidad, operábamos bajo la lógica de la <strong>Deducción</strong>: conocíamos el modelo y predecíamos los datos.</p>
+        
+        <div class="note">
+            <strong>Ejemplo Clásico:</strong> "Tengo una moneda justa (\(p=0.5\)). ¿Cuál es la probabilidad de sacar 3 caras?"
+        </div>
+
+        <p>En Estadística, hacemos el camino inverso, la <strong>Inferencia</strong>:</p>
+        <div class="note" style="border-left-color: var(--warning); background: #fff7ed;">
+            <strong>El Problema Estadístico:</strong> "Lancé una moneda y saqué 3 caras seguidas. <strong>No sé si la moneda es justa.</strong> ¿Cuál es el valor de \(p\) que mejor explica lo que acabo de ver?"
+        </div>
+
+        <p>
+            Si sacas 100 caras seguidas, tu intuición te dice que la moneda está trucada (\(p \approx 1\)). Esa intuición es lo que formalizamos con la <strong>Función de Verosimilitud</strong> (\(L\)).
+        </p>
+    </section>
+
+    <section id="emv">
+        <h2>2. El Método de Máxima Verosimilitud (EMV)</h2>
+        <p>El objetivo es encontrar el valor del parámetro \(\theta\) que maximiza la probabilidad de observar la muestra que ya tenemos.</p>
+
+        <h3>La Receta del Éxito (Paso a Paso)</h3>
+        <ol>
+            <li><strong>Plantear la Función de Verosimilitud \(L(\theta)\):</strong> Es la probabilidad conjunta de la muestra (productoria).
+                \[L(\theta) = \prod_{i=1}^{n} f(x_i; \theta)\]
+            </li>
+            <li><strong>Aplicar Logaritmo Natural (\(\ln\)):</strong> Esto es clave. El logaritmo convierte las multiplicaciones (difíciles de derivar) en sumas (fáciles de derivar). Como el logaritmo es creciente, el máximo está en el mismo lugar.
+                \[\ln L(\theta) = \sum_{i=1}^{n} \ln f(x_i; \theta)\]
+            </li>
+            <li><strong>Derivar e igualar a cero:</strong> Buscamos el punto crítico.
+                \[\frac{\partial \ln L(\theta)}{\partial \theta} = 0\]
+            </li>
+            <li><strong>Despejar \(\theta\):</strong> El valor resultante es tu estimador, denotado como \(\hat{\theta}\).</li>
+        </ol>
+    </section>
+
+    <section id="ejemplos">
+        <h2>3. Ejemplos Canónicos</h2>
+        
+        <h3>A. Distribución Bernoulli (La Moneda)</h3>
+        <p>Queremos estimar la probabilidad de éxito \(p\).</p>
+        <div class="math-block">
+            1. Función de masa: \(p^x (1-p)^{1-x}\) <br>
+            2. Verosimilitud: \(L(p) = p^{\sum x_i} (1-p)^{n - \sum x_i}\) <br>
+            3. Log-Verosimilitud: \(\ln L = (\sum x_i)\ln p + (n - \sum x_i)\ln(1-p)\) <br>
+            4. Derivada igualada a 0: \(\frac{\sum x_i}{p} - \frac{n - \sum x_i}{1-p} = 0\)
+        </div>
+        <p><strong>Resultado:</strong> \(\hat{p} = \frac{\sum x_i}{n} = \bar{X}\) (El promedio muestral).</p>
+
+        <h3>B. Distribución Uniforme \([0, \theta]\) (El Autobús)</h3>
+        <div class="warning">
+            <strong>¡Cuidado!</strong> Aquí no podemos derivar porque el parámetro \(\theta\) está en el dominio (indicadora).
+        </div>
+        <p>La función de densidad es \(1/\theta\) si \(0 \leq x_i \leq \theta\). La verosimilitud es:</p>
+        \[L(\theta) = \frac{1}{\theta^n} \cdot \mathbb{I}_{[\max(x_i), \infty)}(\theta)\]
+        <p>Para maximizar \(1/\theta^n\) (hacerlo lo más grande posible), necesitamos que \(\theta\) sea <strong>lo más pequeño posible</strong>, pero \(\theta\) debe ser mayor o igual a todos los datos observados.</p>
+        <p><strong>Resultado:</strong> \(\hat{\theta} = \max(X_1, \ldots, X_n)\).</p>
+    </section>
+
+    <section id="bondad">
+        <h2>4. Bondad de los Estimadores</h2>
+        <p>Ya tenemos la fórmula (\(\hat{\theta}\)). Ahora, ¿cómo sabemos si es buena? Evaluamos sus propiedades.</p>
+
+        <h3>1. Insesgadez (Unbiasedness)</h3>
+        <p>Un estimador es insesgado si "en promedio" acierta al valor real.</p>
+        \[E[\hat{\theta}] = \theta\]
+        <p>Si \(E[\hat{\theta}] \neq \theta\), la diferencia se llama <strong>Sesgo</strong> (\(Bias\)).</p>
+        <ul>
+            <li>\(\bar{X}\) es insesgado para la media \(\mu\).</li>
+            <li>\(S^2\) (dividiendo por n) es <strong>sesgado</strong> para \(\sigma^2\).</li>
+            <li>\(S^2_{n-1}\) (dividiendo por n-1) es <strong>insesgado</strong>.</li>
+        </ul>
+
+        <h3>2. Eficiencia (Efficiency)</h3>
+        <p>Entre dos estimadores insesgados, preferimos el que tenga <strong>menor varianza</strong> (menos dispersión). Existe un límite teórico llamado la <em>Cota de Cramer-Rao</em>. Si un estimador alcanza esa varianza mínima, es <strong>Eficiente</strong>.</p>
+
+        <h3>3. Consistencia (Consistency)</h3>
+        <p>¿Qué pasa si tengo infinitos datos? Un estimador es consistente si al aumentar la muestra (\(n \to \infty\)), el estimador converge al valor real.</p>
+        <p><em>Regla práctica:</em> Si \(\lim_{n \to \infty} Sesgo = 0\) y \(\lim_{n \to \infty} Varianza = 0\), es consistente.</p>
+    </section>
+
+    <section id="asintotica">
+        <h2>4.5. Normalidad Asintótica (El Puente a la Inferencia)</h2>
+        <div class="badge badge-theory">Minuto 38:00</div>
+        
+        <p>Esta es la "joya de la corona" de los Estimadores de Máxima Verosimilitud (EMV). Es la propiedad que nos permite calcular márgenes de error en el futuro.</p>
+
+        <div class="note">
+            <strong>El Teorema:</strong> No importa de qué distribución vengan tus datos originales (Poisson, Exponencial, etc.). Si el tamaño de muestra $n$ es suficientemente grande, la distribución del <em>estimador</em> $\hat{\theta}$ se comporta como una <strong>Normal</strong>.
+        </div>
+
+        
+
+        <h3>¿Por qué es esto un "Superpoder"?</h3>
+        <p>Porque conocemos todo sobre la distribución Normal. Si sabemos que nuestro estimador es normal, podemos:</p>
+        <ul>
+            <li>Construir <strong>Intervalos de Confianza</strong> (ej: "El parámetro está entre 4 y 6 con 95% de seguridad").</li>
+            <li>Realizar <strong>Tests de Hipótesis</strong>.</li>
+        </ul>
+
+        <h3>La Fórmula Matemática</h3>
+        <p>Cuando $n \to \infty$, el estimador se distribuye así:</p>
+        
+        <div class="math-block" style="border-left: 4px solid var(--success);">
+            $$ \hat{\theta} \sim N\left( \theta, \frac{1}{n \cdot I(\theta)} \right) $$
+        </div>
+
+        <ul>
+            <li><strong>Media $\theta$:</strong> La campana se centra en el valor verdadero (Insesgadez Asintótica).</li>
+            <li><strong>Varianza $\frac{1}{n \cdot I(\theta)}$:</strong> La dispersión depende de $n$ (cantidad de datos) y de $I(\theta)$ (Información de Fisher).</li>
+        </ul>
+
+        <div class="warning">
+            <strong>Nota:</strong> $I(\theta)$ es la "Información de Fisher". Mide cuánta información sobre el parámetro nos da cada dato. A mayor información, menor varianza (la campana es más finita).
+        </div>
+    </section>
+
+    <section id="ecm">
+        <h2>5. El Error Cuadrático Medio (ECM)</h2>
+        <p>Esta es la métrica suprema para comparar estimadores. Combina la exactitud (sesgo) y la precisión (varianza).</p>
+        
+        <div class="math-block" style="border: 2px solid var(--primary);">
+            \[ECM(\hat{\theta}) = Var(\hat{\theta}) + [Sesgo(\hat{\theta})]^2\]
+        </div>
+
+        <p><strong>El Dilema Sesgo-Varianza:</strong> A veces, aceptamos un estimador con un pequeño sesgo si eso reduce drásticamente su varianza, resultando en un ECM total menor.</p>
+    </section>
+
+    <section id="invariancia">
+        <h2>6. Principio de Invariancia</h2>
+        <p>Una propiedad hermosa de los Estimadores de Máxima Verosimilitud (EMV).</p>
+        <p>Si \(\hat{\theta}\) es el EMV de \(\theta\), y quieres estimar una función \(g(\theta)\), entonces el estimador es simplemente \(g(\hat{\theta})\).</p>
+        <p><em>Ejemplo:</em> Si el EMV de la varianza es \(\hat{\sigma}^2\), el EMV de la desviación estándar es simplemente \(\sqrt{\hat{\sigma}^2}\).</p>
+    </section>
+
+    <section id="ejercicios">
+        <h2>7. Ejercicios Interactivos</h2>
+        <p>Intenta resolverlos antes de abrir la solución.</p>
+
+        <details>
+            <summary>📝 Ejercicio 1: La Exponencial (Tiempo de Falla)</summary>
+            <div style="padding: 10px;">
+                <p><strong>Contexto:</strong> Estás analizando el tiempo de vida de componentes electrónicos. Siguen una distribución Exponencial: \(f(x) = \lambda e^{-\lambda x}\). <br>
+                Tienes una muestra: \(x_1, \ldots, x_n\).</p>
+                <p><strong>Consigna:</strong> Encuentra el EMV para \(\lambda\).</p>
+                <hr>
+                <p><strong>Solución:</strong></p>
+                <ol>
+                    <li>Verosimilitud: \(L(\lambda) = \prod \lambda e^{-\lambda x_i} = \lambda^n e^{-\lambda \sum x_i}\)</li>
+                    <li>Log-Verosimilitud: \(\ln L = n \ln \lambda - \lambda \sum x_i\)</li>
+                    <li>Derivada: \(\frac{n}{\lambda} - \sum x_i = 0\)</li>
+                    <li>Despeje: \(\hat{\lambda} = \frac{n}{\sum x_i} = \frac{1}{\bar{X}}\)</li>
+                </ol>
+                <p><em>Interpretación:</em> La tasa de falla estimada es la inversa del tiempo promedio de vida. Lógico.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>📊 Ejercicio 2: Comparación de Estimadores (ECM)</summary>
+            <div style="padding: 10px;">
+                <p><strong>Contexto:</strong> Tienes dos estimadores para la media \(\mu\).
+                <br>\(\hat{\mu}_1 = 0.5 X_1 + 0.5 X_2\) (Promedio)
+                <br>\(\hat{\mu}_2 = X_1\) (Solo el primer dato)</p>
+                <p><strong>Consigna:</strong> ¿Cuál tiene menor ECM? (Asume \(Var(X)=\sigma^2\)).</p>
+                <hr>
+                <p><strong>Solución:</strong></p>
+                <p>Ambos son insesgados (\(E[\hat{\mu}] = \mu\)), así que \(Sesgo = 0\). El ECM es igual a la Varianza.</p>
+                <ul>
+                    <li>\(Var(\hat{\mu}_1) = 0.5^2 \sigma^2 + 0.5^2 \sigma^2 = 0.25\sigma^2 + 0.25\sigma^2 = \mathbf{0.5\sigma^2}\)</li>
+                    <li>\(Var(\hat{\mu}_2) = Var(X_1) = \mathbf{\sigma^2}\)</li>
+                </ul>
+                <p><strong>Conclusión:</strong> \(\hat{\mu}_1\) es mejor (tiene la mitad del error cuadrático medio). Usar más datos reduce el error.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>🚀 Ejercicio 3: Invariancia (Probabilidad)</summary>
+            <div style="padding: 10px;">
+                <p><strong>Contexto:</strong> Usando el resultado del Ejercicio 1 (Exponencial), donde \(\hat{\lambda} = 1/\bar{X}\).</p>
+                <p><strong>Consigna:</strong> Estima la probabilidad de que un componente dure más de 100 horas. Es decir, estima \(P(X > 100) = e^{-100\lambda}\).</p>
+                <hr>
+                <p><strong>Solución:</strong></p>
+                <p>Por el <strong>Principio de Invariancia</strong>, no necesitamos derivar nada nuevo. Solo sustituimos \(\lambda\) por \(\hat{\lambda}\) en la fórmula de la probabilidad.</p>
+                \[Estimador = e^{-100 \cdot (1/\bar{X})} = e^{-\frac{100}{\bar{X}}}\]
+            </div>
+        </details>
+
+    </section>
+
+   
+
+</div>
+
+</body>
+</html>

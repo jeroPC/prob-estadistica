@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compendio Maestro: Test de Hipótesis (Capítulo 10)</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --light-bg: #ecf0f1;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --warning: #f1c40f;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 30px;
+        }
+
+        h1 { margin: 0; font-size: 2.5em; }
+        h2 { color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top: 40px; }
+        h3 { color: var(--accent); margin-top: 25px; }
+
+        /* Componentes */
+        .box {
+            background: var(--light-bg);
+            border-left: 5px solid var(--primary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .theory { border-color: var(--accent); background: #eaf6ff; }
+        .example { border-color: var(--success); background: #eafaf1; }
+        .alert { border-color: var(--danger); background: #fdedec; }
+        .tip { border-color: var(--warning); background: #fef9e7; }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+            margin-right: 5px;
+        }
+        .tag-theo { background: var(--accent); }
+        .tag-prac { background: var(--success); }
+
+        /* Tablas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th { background-color: var(--primary); color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+
+        /* Fórmulas (Simuladas con CSS para no depender de MathJax externo pesado) */
+        .math {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            background: #fff;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .display-math {
+            display: block;
+            text-align: center;
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2em;
+            margin: 15px 0;
+        }
+
+        /* Navegación */
+        .toc {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .toc ul { list-style: none; padding-left: 0; }
+        .toc li { margin-bottom: 10px; }
+        .toc a { text-decoration: none; color: var(--accent); font-weight: bold; }
+        .toc a:hover { text-decoration: underline; }
+
+        /* Gráficos SVG */
+        .chart-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        svg {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #eee;
+            background: white;
+        }
+        .area-reject { fill: rgba(231, 76, 60, 0.4); }
+        .line-dist { fill: none; stroke: var(--primary); stroke-width: 2; }
+        .axis { stroke: #333; stroke-width: 1; }
+        .label { font-size: 12px; fill: #555; }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        code {
+            background: #eee;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Test de Hipótesis: La Guía Definitiva</h1>
+        <p>Basado en el video de "Probabilidad Fiuba" (Capítulo 10)</p>
+        <p><em>Teoría, Práctica, Fórmulas y Gráficos Interactivos</em></p>
+    </header>
+
+    <div class="toc">
+        <h3>📚 Índice de Contenidos</h3>
+        <ul>
+            <li><a href="#sec1">1. Familias Exponenciales: El Atajo Teórico</a></li>
+            <li><a href="#sec2">2. Test para la Varianza (Normal, μ desconocida)</a></li>
+            <li><a href="#sec3">3. El Caso Especial: Distribución Uniforme</a></li>
+            <li><a href="#sec4">4. Test para la Media (Varianza Conocida vs Desconocida)</a></li>
+            <li><a href="#sec5">5. Tests Asintóticos (Muestras Grandes & Bernoulli)</a></li>
+            <li><a href="#sec6">6. El P-Valor (P-Value)</a></li>
+            <li><a href="#sec7">7. Resumen de Fórmulas y Trucos</a></li>
+        </ul>
+    </div>
+
+    <section id="sec1">
+        <h2>1. Familias Exponenciales: El Atajo Teórico</h2>
+        <p>Para evitar el largo proceso del Cociente de Verosimilitud Generalizado, utilizamos una propiedad de las familias exponenciales de distribuciones.</p>
+
+        <div class="box theory">
+            <h3>🧪 La Propiedad Maestra</h3>
+            <p>Si la muestra proviene de una familia exponencial con parámetro <span class="math">&theta;</span>:</p>
+            <ul>
+                <li><strong>Caso 1: Si C(&theta;) es Creciente</strong><br>
+                    El test sigue la dirección de la hipótesis alternativa ($H_1$).<br>
+                    Si $H_1: \theta > \theta_0$ &rarr; Rechazo si $T > k$.
+                </li>
+                <li><strong>Caso 2: Si C(&theta;) es Decreciente</strong><br>
+                    La desigualdad se invierte.<br>
+                    Si $H_1: \theta > \theta_0$ &rarr; Rechazo si $T < k$ (o $-T > k$).
+                </li>
+            </ul>
+        </div>
+        <div class="box tip">
+            <strong>💡 Truco:</strong> La mayoría de las distribuciones comunes (Normal para la media, Gamma, Poisson, Binomial) caen en el Caso 1 (Creciente).
+        </div>
+    </section>
+
+    <section id="sec2">
+        <h2>2. Test para la Varianza (Normal, μ conocida/irrelevante)</h2>
+        <p>Analizamos la varianza ($\sigma^2$) de una población Normal.</p>
+        
+        <div class="display-math">
+            $H_0: \sigma^2 \le s \quad \text{vs} \quad H_1: \sigma^2 > s$
+        </div>
+
+        <p>La función $C(\sigma^2) = -1/(2\sigma^2)$ es <strong>creciente</strong>. Por lo tanto, rechazamos para valores grandes del estadístico.</p>
+
+        <div class="box theory">
+            <h3>Estadístico y Distribución</h3>
+            <p>El estadístico de prueba estandarizado bajo $H_0$ ($\sigma^2 = s$) es:</p>
+            <div class="display-math">
+                $W = \frac{\sum (X_i - \mu)^2}{s} \sim \chi^2_{(n)}$
+            </div>
+            <p>Donde $\chi^2$ es la distribución Chi-cuadrado con $n$ grados de libertad.</p>
+        </div>
+
+        <div class="box example">
+            <h3>📝 Ejemplo Práctico: Solución Química</h3>
+            <p><strong>Enunciado:</strong> Se comparan dos métodos. Se busca saber si el nuevo método es <em>más preciso</em> (menor varianza). La varianza vieja es 1.</p>
+            <p><strong>Datos:</strong> $n = 21$, Suma de cuadrados = 12.6, $\alpha = 0.01$.</p>
+            
+            <p><strong>Paso 1: Hipótesis</strong><br>
+            Queremos probar que es mejor (varianza < 1).<br>
+            $H_1: \sigma^2 < 1$ (Lo que quiero probar)<br>
+            $H_0: \sigma^2 \ge 1$</p>
+
+            <p><strong>Paso 2: Regla de Decisión</strong><br>
+            Como $H_1$ tiene "<", rechazo si el estadístico es <strong>menor</strong> que el punto crítico.<br>
+            Punto crítico: Cuantil $\chi^2_{21, 0.01}$. Según tabla o software $\approx 8.89$.</p>
+
+            <p><strong>Paso 3: Cálculo</strong><br>
+            Estadístico Observado = $12.6$.</p>
+
+            <p><strong>Conclusión:</strong><br>
+            $12.6 > 8.89$. Caemos en la zona de NO RECHAZO.<br>
+            <em>Interpretación:</em> No hay evidencia suficiente para decir que el método nuevo es más preciso.</p>
+        </div>
+
+        <div class="chart-container">
+            <h4>Visualización del Test (Chi-Cuadrado)</h4>
+            <svg width="400" height="200" viewBox="0 0 400 200">
+                <line x1="40" y1="180" x2="380" y2="180" class="axis" />
+                <line x1="40" y1="180" x2="40" y2="20" class="axis" />
+                <path d="M40,180 Q60,20 100,60 T380,178" class="line-dist" />
+                <path d="M40,180 Q45,100 60,110 L60,180 Z" class="area-reject" />
+                <text x="50" y="195" class="label">Zona Rechazo</text>
+                <text x="60" y="175" class="label" font-weight="bold">8.89 (k)</text>
+                <circle cx="120" cy="180" r="4" fill="blue" />
+                <text x="120" y="165" fill="blue" font-weight="bold">12.6 (Obs)</text>
+            </svg>
+            <p><small>El punto azul (observado) cae fuera de la zona roja (rechazo).</small></p>
+        </div>
+    </section>
+
+    <section id="sec3">
+        <h2>3. El Caso Especial: Distribución Uniforme</h2>
+        <p>Aunque no es una familia exponencial regular, la <strong>Uniforme(0, &theta;)</strong> se comporta como el "Caso 1" (Creciente).</p>
+        
+        <div class="box theory">
+            <h3>Estadístico del Máximo</h3>
+            <p>Para $H_0: \theta \le 4$ vs $H_1: \theta > 4$:</p>
+            <ul>
+                <li>Estadístico Suficiente ($T$): El máximo valor de la muestra ($X_{(n)}$).</li>
+                <li>Regla: Rechazar si $X_{(n)} > k$.</li>
+                <li><strong>Cálculo de k:</strong> $k = \theta_0 \cdot \sqrt[n]{1-\alpha}$</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="sec4">
+        <h2>4. Test para la Media (Normal)</h2>
+        <p>Aquí es donde la teoría se divide según qué tanto conocemos sobre la población.</p>
+
+        <h3>Caso A: Varianza ($\sigma^2$) Conocida</h3>
+        <p>Es el caso ideal, poco común en la realidad.</p>
+        <div class="display-math">
+            Estadístico: $Z = \frac{\sqrt{n}(\bar{X} - \mu_0)}{\sigma} \sim N(0,1)$
+        </div>
+        
+        <h3>Caso B: Test Compuesto (Bilateral)</h3>
+        <p>Si $H_1: \mu \neq \mu_0$, el rechazo ocurre en <strong>ambos extremos</strong>.</p>
+        <div class="box alert">
+            <strong>⚠️ Cuidado con el Alfa:</strong> En tests bilaterales, debes dividir $\alpha$ en dos.
+            <ul>
+                <li>Cola izquierda: $\alpha / 2$</li>
+                <li>Cola derecha: $\alpha / 2$</li>
+            </ul>
+        </div>
+
+        <h3>Caso C: Varianza Desconocida (El "Golpe de Realidad")</h3>
+        <p>No conocemos $\sigma$. Lo estimamos con $S$ (desvío muestral).</p>
+        <div class="box theory">
+            <h3>Test T de Student</h3>
+            <div class="display-math">
+                $T = \frac{\sqrt{n}(\bar{X} - \mu_0)}{S} \sim t_{n-1}$
+            </div>
+            <p>La distribución t-Student es similar a la normal pero con colas más "gordas" (mayor incertidumbre). A medida que $n$ crece, se parece más a la Normal.</p>
+        </div>
+    </section>
+
+    <section id="sec5">
+        <h2>5. Tests Asintóticos (Muestras Grandes)</h2>
+        <p>Cuando la distribución exacta es difícil (ej. Binomial/Bernoulli), usamos el <strong>Teorema Central del Límite (TCL)</strong> para aproximar a una Normal cuando $n \to \infty$.</p>
+
+        <div class="box example">
+            <h3>📝 Ejemplo Maestro: Tratamiento Médico (Bernoulli)</h3>
+            <p><strong>Situación:</strong> Tratamiento viejo cura 40% ($p=0.4$). Nuevo tratamiento se prueba en 100 pacientes, 83 se curan.</p>
+            <p><strong>Hipótesis:</strong> $H_0: p \le 0.4$ vs $H_1: p > 0.4$.</p>
+            
+            <p><strong>Fórmula Asintótica (Estandarización):</strong></p>
+            <div class="display-math">
+                $Z \approx \frac{\hat{p} - p_0}{\sqrt{\frac{p_0(1-p_0)}{n}}}$
+            </div>
+            <p>O usando la suma directa:</p>
+            <div class="display-math">
+                $Z \approx \frac{\sum X_i - n \cdot p_0}{\sqrt{n \cdot p_0(1-p_0)}}$
+            </div>
+
+            <p><strong>Cálculos:</strong><br>
+            Media bajo $H_0$: $100 \times 0.4 = 40$.<br>
+            Desvío bajo $H_0$: $\sqrt{100 \times 0.4 \times 0.6} = \sqrt{24} \approx 4.9$.<br>
+            $Z_{obs} = (83 - 40) / 4.9 = 8.77$.</p>
+
+            <p><strong>Decisión ($\alpha=0.05$):</strong><br>
+            $Z_{critico} = 1.64$.<br>
+            Como $8.77 > 1.64$, <strong>RECHAZAMOS $H_0$</strong>. El nuevo tratamiento es efectivo.</p>
+        </div>
+    </section>
+
+    <section id="sec6">
+        <h2>6. El P-Valor (P-Value)</h2>
+        <p>Es la métrica más usada en ciencia moderna. Responde: <em>¿Qué tan probable es ver mis datos si la hipótesis nula fuera cierta?</em></p>
+
+        <div class="box tip">
+            <h3>📉 Regla de Oro del P-Valor</h3>
+            <ul>
+                <li><strong>Si P-Valor < $\alpha$:</strong> RECHAZO $H_0$ (Resultado Significativo).</li>
+                <li><strong>Si P-Valor > $\alpha$:</strong> NO RECHAZO $H_0$.</li>
+            </ul>
+        </div>
+
+        <div class="chart-container">
+            <h4>Interpretación Gráfica del P-Valor</h4>
+            <svg width="400" height="200" viewBox="0 0 400 200">
+                <path d="M20,180 Q200,-50 380,180" fill="none" stroke="#2c3e50" stroke-width="2"/>
+                <line x1="20" y1="180" x2="380" y2="180" stroke="#333"/>
+                
+                <line x1="300" y1="180" x2="300" y2="120" stroke="red" stroke-dasharray="4" />
+                <text x="300" y="110" fill="red" font-size="10">Alfa (Límite)</text>
+
+                <circle cx="360" cy="178" r="5" fill="blue" />
+                <text x="340" y="160" fill="blue" font-weight="bold">Obs</text>
+                
+                <text x="200" y="50" text-anchor="middle" font-size="12">Distribución bajo H0</text>
+            </svg>
+            <p>En el ejemplo médico, el valor 8.77 está tan a la derecha que el área (P-valor) es prácticamente 0.</p>
+        </div>
+    </section>
+
+    <section id="sec7">
+        <h2>7. Resumen de Fórmulas y Trucos</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Caso</th>
+                    <th>Conocemos...</th>
+                    <th>Estadístico</th>
+                    <th>Distribución</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Media (Ideal)</strong></td>
+                    <td>$\mu$?, $\sigma$ SI</td>
+                    <td>$\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}$</td>
+                    <td>Normal (Z)</td>
+                </tr>
+                <tr>
+                    <td><strong>Media (Real)</strong></td>
+                    <td>$\mu$?, $\sigma$ NO</td>
+                    <td>$\frac{\bar{X}-\mu}{S/\sqrt{n}}$</td>
+                    <td>t-Student ($n-1$)</td>
+                </tr>
+                <tr>
+                    <td><strong>Varianza</strong></td>
+                    <td>$\sigma^2$?, $\mu$ irrelev.</td>
+                    <td>$\frac{\sum(X-\mu)^2}{\sigma_0^2}$</td>
+                    <td>Chi-Cuadrado ($\chi^2$)</td>
+                </tr>
+                <tr>
+                    <td><strong>Proporción (Bernoulli)</strong></td>
+                    <td>$p$?, Muestra Grande</td>
+                    <td>$\frac{\hat{p}-p_0}{\sqrt{p_0(1-p_0)/n}}$</td>
+                    <td>Normal Asintótica</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="box tip">
+            <h3>🧠 Trucos Mentales para el Examen</h3>
+            <ol>
+                <li><strong>¿Quién es $H_1$?</strong> Siempre pon en $H_1$ lo que quieres "demostrar" o "detectar" (ej. "el nuevo método es mejor").</li>
+                <li><strong>Dirección del signo:</strong> Si la Familia Exponencial es creciente, el signo de $H_1$ (ej. ">") es el mismo signo de la zona de rechazo ($T > k$).</li>
+                <li><strong>¿P-Valor o Tabla?</strong> Si tienes computadora, usa P-valor. Si estás con tabla de papel, usa Región Crítica (k).</li>
+                <li><strong>Potencia ($1-\beta$):</strong> Para mejorar la potencia (detectar mejor el error) sin tocar el alfa, la ÚNICA solución real es <strong>aumentar $n$</strong>.</li>
+            </ol>
+        </div>
+    </section>
+
+   <section id="sec5">
+        <h2>5. Tests Asintóticos (La Estandarización de Bernoulli - Min 37)</h2>
+        <p>Cuando trabajamos con proporciones (éxito/fracaso), la suma de variables es una Binomial. Como es discreta (escalonada), no podemos obtener un alfa exacto. Usamos el <strong>Teorema Central del Límite</strong> para aproximar a una Normal.</p>
+
+        <div class="box theory">
+            <h3>⚙️ La Fórmula de Estandarización (El "Truco")</h3>
+            <p>Para estandarizar bajo $H_0$, asumimos que el verdadero valor de $p$ es $p_0$ (el límite de la hipótesis nula).</p>
+            <p>La variable estandarizada $Z$ se construye así:</p>
+            
+            <div class="display-math">
+                $Z_n = \frac{\text{Total Éxitos} - \text{Esperado bajo } H_0}{\text{Desvío bajo } H_0}$
+            </div>
+            
+            <div class="display-math">
+                $Z_n = \frac{\sum X_i - n \cdot p_0}{\sqrt{n \cdot p_0 \cdot (1 - p_0)}}$
+            </div>
+
+            <p><strong>¿Por qué usamos $p_0$ abajo en la raíz?</strong><br>
+            Porque estamos construyendo la "zona de no rechazo" asumiendo que $H_0$ es verdad. Por eso la varianza también debe calcularse con $p_0$.</p>
+        </div>
+
+        <div class="box example">
+            <h3>📝 Ejemplo Maestro: Tratamiento Médico (Min 41)</h3>
+            <p><strong>Datos:</strong> $n=100$, Tratamiento Viejo $p_0 = 0.40$. Muestra: 83 curados.</p>
+            <p><strong>Hipótesis:</strong> $H_0: p \le 0.4$ vs $H_1: p > 0.4$.</p>
+
+            <p><strong>1. Definir Zona de Rechazo ($\alpha=0.05$):</strong><br>
+            Buscamos en la tabla Normal el $Z$ que deja 0.05 a la derecha.<br>
+            $k = 1.645$.<br>
+            <em>Regla:</em> Rechazo si $Z_{obs} > 1.645$.</p>
+
+            <p><strong>2. Calcular Estadístico ($Z_{obs}$):</strong></p>
+            <ul>
+                <li>Suma observada = 83</li>
+                <li>Esperado ($n \cdot p_0$) = $100 \cdot 0.4 = 40$</li>
+                <li>Desvío ($\sqrt{n p q}$) = $\sqrt{100 \cdot 0.4 \cdot 0.6} = \sqrt{24} \approx 4.899$</li>
+            </ul>
+            <div class="display-math">
+                $Z_{obs} = \frac{83 - 40}{4.899} = \frac{43}{4.899} \approx 8.77$
+            </div>
+
+            <p><strong>3. Conclusión:</strong><br>
+            $8.77 > 1.645$ &rarr; <strong>Rechazo contundente</strong>.</p>
+        </div>
+
+        <div class="box alert">
+            <h3>⚠️ La "Otra" Estandarización (Error Tipo II - Min 48)</h3>
+            <p>El video menciona un caso final: <em>"¿Cuál es la probabilidad de error si la verdadera p es 0.45?"</em></p>
+            <p>Aquí cambia la fórmula. Como ahora asumimos que la realidad es $p=0.45$, debemos estandarizar usando <strong>0.45</strong> en el desvío, no 0.40.</p>
+            <div class="display-math">
+                $Z_{real} = \frac{\text{Punto Crítico} - n \cdot 0.45}{\sqrt{n \cdot 0.45 \cdot 0.55}}$
+            </div>
+            <p>Esto sirve para calcular la <strong>Potencia del Test</strong> ($1 - \beta$).</p>
+        </div>
+    </section>
+
+    <section id="sec6">
+        <h2>6. El P-Valor: Ejemplos y Escenarios</h2>
+        <p>El P-Valor es la probabilidad de encontrar un resultado igual o más extremo que el observado, asumiendo que $H_0$ es cierta.</p>
+
+        <div class="box tip">
+            <strong>Regla Mnemotécnica:</strong> "Si el P es bajo, la Nula se va abajo." (If P is low, the Null must go).
+        </div>
+
+        <h3>Escenarios Posibles (Ejemplos Comparativos)</h3>
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th>Escenario</th>
+                    <th>Valor Z Observado</th>
+                    <th>Gráfico Mental</th>
+                    <th>P-Valor (Área cola)</th>
+                    <th>Decisión ($\alpha=0.05$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1. El del Video (Extremo)</strong></td>
+                    <td>$Z = 8.77$</td>
+                    <td>El punto está lejísimos a la derecha.</td>
+                    <td>$P \approx 0.00000...$</td>
+                    <td><strong>Rechazo $H_0$</strong><br>(Muy significativo)</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Caso "Borderline"</strong></td>
+                    <td>$Z = 1.70$</td>
+                    <td>Apenas pasa la barrera de 1.64.</td>
+                    <td>$P \approx 0.044$</td>
+                    <td><strong>Rechazo $H_0$</strong><br>(Por poco, pues $0.044 < 0.05$)</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Caso No Rechazo</strong></td>
+                    <td>$Z = 1.00$</td>
+                    <td>Cae dentro de la campana normal.</td>
+                    <td>$P \approx 0.158$</td>
+                    <td><strong>No Rechazo $H_0$</strong><br>(Pues $0.158 > 0.05$)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="chart-container">
+            <h4>Visualización: ¿Dónde cae tu P-Valor?</h4>
+            <svg width="500" height="250" viewBox="0 0 500 250">
+                <line x1="50" y1="220" x2="450" y2="220" stroke="black" stroke-width="2"/>
+                
+                <path d="M50,220 Q150,220 250,20 Q350,220 450,220" fill="none" stroke="#2c3e50" stroke-width="2"/>
+                
+                <line x1="380" y1="220" x2="380" y2="150" stroke="red" stroke-dasharray="4"/>
+                <text x="380" y="140" fill="red" font-size="12" text-anchor="middle">Z=1.64 (Límite)</text>
+
+                <circle cx="445" cy="218" r="4" fill="purple" />
+                <text x="445" y="205" fill="purple" font-size="10" text-anchor="end">Caso 1 (8.77)</text>
+
+                <circle cx="385" cy="210" r="4" fill="orange" />
+                <text x="385" y="195" fill="orange" font-size="10" text-anchor="middle">Caso 2 (1.70)</text>
+
+                <circle cx="330" cy="180" r="4" fill="green" />
+                <text x="330" y="170" fill="green" font-size="10" text-anchor="middle">Caso 3 (1.0)</text>
+            </svg>
+            <p><small>Nota: Mientras más a la derecha está el punto, más pequeño es el P-Valor (el área restante).</small></p>
+        </div>
+    </section>
+</div>
+
+
+
+</body>
+</html>

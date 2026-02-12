@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicación: Covarianza de Dados Piramidales</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .highlight {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-left: 5px solid #3498db;
+            margin: 15px 0;
+        }
+        .note {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 5px solid #ffc107;
+            font-size: 0.9em;
+        }
+        code {
+            background-color: #eee;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        ul.properties {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul.properties li {
+            background: #fdfdfd;
+            border: 1px solid #ddd;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .cancel {
+            color: #c0392b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Análisis del Ejercicio de Covarianza</h1>
+
+    <div class="container">
+        <h2>1. Planteamiento del Problema</h2>
+        <p>
+            Tenemos dos variables aleatorias, \(X\) e \(Y\), que representan el lanzamiento de dos dados piramidales (tetraedros) de 4 caras.
+        </p>
+        <ul>
+            <li><strong>Espacio muestral:</strong> \(\{1, 2, 3, 4\}\)</li>
+            <li><strong>Probabilidad:</strong> \(P(x) = 1/4\) para cada cara (dados equilibrados).</li>
+            <li><strong>Condición Clave:</strong> Se lanzan de forma <em>independiente</em>.</li>
+        </ul>
+        <p>Se definen dos nuevas variables transformadas:</p>
+        <p>$$ U = X + Y - 2 $$</p>
+        <p>$$ V = 2X - Y $$</p>
+        <p><strong>Objetivo:</strong> Hallar \( Cov(U, V) \).</p>
+    </div>
+
+    <div class="container">
+        <h2>2. Desarrollo Paso a Paso</h2>
+        
+        <h3>Paso A: Aplicar la Bilinealidad</h3>
+        <p>La covarianza es un operador lineal en ambos argumentos. Esto significa que podemos "distribuir" la covarianza casi como si fuera una multiplicación algebraica.</p>
+        <p>$$ Cov(X + Y - 2, \quad 2X - Y) $$</p>
+        
+        <p>Expandimos todos los términos contra todos los términos:</p>
+        <p style="font-size: 0.9em;">
+            $$ = Cov(X, 2X) + Cov(X, -Y) + Cov(Y, 2X) + Cov(Y, -Y) + \underbrace{Cov(-2, 2X) + Cov(-2, -Y)}_{\text{Términos con constantes}} $$
+        </p>
+
+        <h3>Paso B: Sacar las constantes (Escalares)</h3>
+        <p>Las constantes que multiplican a las variables salen fuera de la covarianza (Propiedad: \(Cov(aX, bY) = ab \cdot Cov(X, Y)\)).</p>
+        
+        <p>
+            $$ = 2Cov(X, X) - 1Cov(X, Y) + 2Cov(Y, X) - 1Cov(Y, Y) + 0 + 0 $$
+        </p>
+
+        <div class="highlight">
+            <h3>¿Por qué se anulan términos? (El "Porqué")</h3>
+            <p>Aquí es donde aplicamos la lógica física y estadística del ejercicio:</p>
+            <ol>
+                <li>
+                    <strong>Independencia:</strong> El enunciado dice que los dados son independientes. 
+                    <br><em>Propiedad:</em> Si \(X\) e \(Y\) son independientes \(\rightarrow Cov(X, Y) = 0\).
+                    <br><span class="cancel">\( \Rightarrow -Cov(X, Y) \) y \( +2Cov(Y, X) \) se vuelven 0.</span>
+                </li>
+                <li>
+                    <strong>Covarianza de constantes:</strong> El número "-2" en la variable \(U\) es una constante. Una constante no varía, por lo tanto, no tiene "covariación" con nada.
+                    <br><em>Propiedad:</em> \(Cov(c, X) = 0\).
+                    <br><span class="cancel">\( \Rightarrow Cov(-2, ...) \) se vuelve 0.</span>
+                </li>
+                <li>
+                    <strong>Covarianza con uno mismo:</strong> ¿Qué tanto varía \(X\) respecto a \(X\)? ¡Totalmente! Eso es la varianza.
+                    <br><em>Propiedad:</em> \(Cov(X, X) = Var(X)\).
+                </li>
+            </ol>
+        </div>
+
+        <h3>Paso C: La ecuación simplificada</h3>
+        <p>Limpiando la ecuación con las reglas de arriba, nos queda:</p>
+        <p>$$ = 2Var(X) - 0 + 0 - Var(Y) $$</p>
+        <p><strong>$$ = 2Var(X) - Var(Y) $$</strong></p>
+    </div>
+
+    <div class="container">
+        <h2>3. Cálculo Numérico</h2>
+        <p>Como ambos dados son idénticos (del 1 al 4), \(Var(X) = Var(Y)\). Solo necesitamos calcular una varianza.</p>
+        
+        <p>$$ Var(X) = E(X^2) - [E(X)]^2 $$</p>
+
+        <p><strong>Calculamos la Esperanza \(E(X)\):</strong></p>
+        <p>$$ E(X) = \frac{1+2+3+4}{4} = 2.5 $$</p>
+
+        <p><strong>Calculamos la Esperanza de los cuadrados \(E(X^2)\):</strong></p>
+        <p>$$ E(X^2) = \frac{1^2 + 2^2 + 3^2 + 4^2}{4} = \frac{1 + 4 + 9 + 16}{4} = \frac{30}{4} = 7.5 $$</p>
+
+        <p><strong>Varianza:</strong></p>
+        <p>$$ Var(X) = 7.5 - (2.5)^2 = 7.5 - 6.25 = 1.25 $$</p>
+
+        <h3>Resultado Final</h3>
+        <p>Retomamos la ecuación simplificada:</p>
+        <p>$$ Cov(U, V) = 2(1.25) - 1.25 $$</p>
+        <p>$$ Cov(U, V) = 2.5 - 1.25 = \mathbf{1.25} $$</p>
+    </div>
+
+    <div class="container">
+        <h2>Resumen de Propiedades Utilizadas</h2>
+        <ul class="properties">
+            <li><strong>Bilinealidad:</strong> \( Cov(\sum a_i X_i, \sum b_j Y_j) = \sum \sum a_i b_j Cov(X_i, Y_j) \) <br> <em>(Básicamente: distributiva)</em></li>
+            <li><strong>Simetría:</strong> \( Cov(X, Y) = Cov(Y, X) \)</li>
+            <li><strong>Varianza:</strong> \( Cov(X, X) = Var(X) \)</li>
+            <li><strong>Independencia:</strong> Si son indep. \(\Rightarrow Cov(X, Y) = 0 \)</li>
+            <li><strong>Constantes:</strong> \( Cov(X, c) = 0 \)</li>
+        </ul>
+    </div>
+
+</body>
+</html>

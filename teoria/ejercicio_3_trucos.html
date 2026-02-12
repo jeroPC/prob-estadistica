@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 3: Trucos y Resolución</title>
+    
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
+    
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;       /* Azul principal */
+            --secondary: #475569;     /* Gris texto secundario */
+            --bg: #f8fafc;            /* Fondo general */
+            --card-bg: #ffffff;       /* Fondo tarjetas */
+            --text: #1e293b;          /* Color texto principal */
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--bg);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            margin-top: 50px;
+        }
+
+        h2, h3 {
+            color: var(--primary);
+            margin-top: 25px;
+        }
+
+        /* TARJETAS DE TRUCOS */
+        .trick-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid var(--primary);
+        }
+
+        .question {
+            font-weight: 700;
+            font-size: 1.15em;
+            color: #0f172a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .question::before {
+            content: "Q";
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            font-size: 0.9em;
+        }
+
+        .answer {
+            margin-left: 0;
+            color: var(--secondary);
+        }
+
+        ul, ol {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* SECCIÓN DE RESOLUCIÓN */
+        .resolution-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+            margin-bottom: 60px;
+        }
+
+        .enunciado {
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 20px;
+            border-radius: 8px;
+            font-style: italic;
+            margin-bottom: 30px;
+            color: #334155;
+        }
+
+        .step {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        
+        .step:last-child {
+            border-bottom: none;
+        }
+
+        .highlight {
+            background-color: #fff7ed; /* Naranja muy suave */
+            color: #c2410c;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            border: 1px solid #ffedd5;
+        }
+
+        .note {
+            font-size: 0.95em;
+            color: #0369a1;
+            margin-top: 15px;
+            background: #e0f2fe;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Parte 1: Caja de Herramientas (Trucos Mentales)</h1>
+    <p style="margin-bottom: 30px; color: #64748b;">Aquí recopilamos las estrategias de razonamiento clave para resolver este ejercicio de forma rápida y segura.</p>
+
+    <div class="trick-card">
+        <div class="question">¿Cómo calculo el área de la región $R$ sin integrar?</div>
+        <div class="answer">
+            <p>Tienes dos caminos. El <strong>método geométrico</strong> es mucho más rápido cuando la figura es regular.</p>
+            <ul>
+                <li><strong>Método Visual:</strong> Observa las desigualdades $1-x < y < 3-x$. La "altura vertical" de la figura es siempre la diferencia entre el techo y el piso:
+                $$(3-x) - (1-x) = 2$$
+                Como el ancho en el eje $x$ va de 0 a 2, el área es simplemente:
+                $$\text{Base} \times \text{Altura} = 2 \times 2 = \mathbf{4}$$
+                </li>
+                <li><strong>Método Integral (Formal):</strong> Calcular $\int_0^2 \int_{1-x}^{3-x} dy dx$. Da el mismo resultado, pero lleva más tiempo.</li>
+            </ul>
+            <div class="note"><strong>Dato Clave:</strong> Al ser una distribución uniforme, la densidad es $f_{XY}(x,y) = \frac{1}{\text{Área}} = \frac{1}{4}$.</div>
+        </div>
+    </div>
+
+    <div class="trick-card">
+        <div class="question">¿Cómo sé si una recta es vertical, horizontal u oblicua?</div>
+        <div class="answer">
+            <p>El profesor mencionó: <em>"sé que no son verticales"</em>. Aquí tienes la regla de oro para identificar la inclinación de una recta solo mirando su ecuación:</p>
+            <ul>
+                <li><strong>Vertical ($x = k$):</strong> Solo aparece la variable $x$. Es como una pared.</li>
+                <li><strong>Horizontal ($y = k$):</strong> Solo aparece la variable $y$. Es como un piso plano.</li>
+                <li><strong>Oblicua / Diagonal ($Ax + By = C$):</strong> Aparecen <strong>ambas variables ($x$ e $y$)</strong>.</li>
+            </ul>
+            <p>En nuestro caso, $W = |X+Y-2|$ contiene tanto $X$ como $Y$, por lo que las líneas de nivel obligatoriamente son diagonales.</p>
+        </div>
+    </div>
+
+    <div class="trick-card">
+        <div class="question">¿Por qué a veces ponemos un signo menos al graficar $W$?</div>
+        <div class="answer">
+            <p>Esto se debe a la definición matemática de <strong>Valor Absoluto</strong>. Para poder hacer cálculos (integrales o gráficos), debemos quitar las barras $|...|$.</p>
+            <p>La frontera es la línea media donde el interior vale cero ($Y = 2-X$). Esto divide el plano en dos zonas:</p>
+            <ul>
+                <li><strong>Zona Positiva (Rosa):</strong> Puntos por encima de la línea media. La suma es mayor a 2, por lo que el interior es positivo. Quitamos las barras directamente:
+                $$W = X + Y - 2$$</li>
+                <li><strong>Zona Negativa (Negra):</strong> Puntos por debajo de la línea media. La suma es menor a 2, por lo que el interior es negativo. Para corregirlo, multiplicamos todo por $(-1)$:
+                $$W = -(X + Y - 2) \implies W = 2 - X - Y$$</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="trick-card">
+        <div class="question">¿Qué es la "Saturación" o asimetría de la región?</div>
+        <div class="answer">
+            <p>Hablamos del caso hipotético donde el paralelogramo fuera mucho más largo hacia abajo. Imagina a $W$ como un globo inflándose desde el centro:</p>
+            <ol>
+                <li>Al inicio, el globo crece libremente hacia arriba y hacia abajo.</li>
+                <li>Si el techo está cerca, el globo choca y se detiene arriba ("satura" esa frontera).</li>
+                <li>Si el piso está lejos, el globo sigue creciendo hacia abajo.</li>
+            </ol>
+            <p>Cuando esto pasa, la integral se debe partir en tramos, porque uno de los límites de integración se vuelve constante (la pared fija) mientras el otro sigue moviéndose.</p>
+        </div>
+    </div>
+
+    <div class="trick-card">
+        <div class="question">¿Cómo determino el rango de valores de $W$?</div>
+        <div class="answer">
+            <p>Manipulamos la desigualdad original de la región $R$ ($1-x < y < 3-x$) para construir la expresión de $W$ adentro.</p>
+            <ol>
+                <li>Pasamos la $x$ sumando: $1 < x+y < 3$.</li>
+                <li>Restamos 2 a todos los términos (para formar el núcleo del valor absoluto):
+                $$-1 < x+y-2 < 1$$</li>
+                <li>Aplicamos el valor absoluto: El valor más cercano a 0 posible es 0. El valor más alejado (hacia 1 o -1) es 1.</li>
+            </ol>
+            <p class="highlight">Por lo tanto, el rango es: $W \in [0, 1)$</p>
+        </div>
+    </div>
+
+    <div class="resolution-section">
+        <h1>Parte 2: Resolución del Ejercicio 3</h1>
+        
+        <div class="enunciado">
+            <strong>Enunciado:</strong><br>
+            Se usan dos métodos para medir la temperatura de la superficie de un producto. La distribución de probabilidad conjunta de las dos mediciones $(X, Y)$ es una distribución uniforme en la región:
+            $$R = \{(x,y) : 0 < x < 2, \quad 1-x < y < 3-x\}$$
+            Hallar y graficar la función de distribución de $W = |X + Y - 2|$. (Notar las barras de valor absoluto).
+        </div>
+
+        <div class="step">
+            <h3>Paso 1: Análisis de la Región y Densidad</h3>
+            <p>Primero determinamos el área total y la función de densidad.</p>
+            <p>Como vimos en los trucos, el área es base por altura:</p>
+            $$ \text{Área}(R) = 2 \times 2 = 4 $$
+            <p>Al ser una distribución uniforme, la densidad es constante en toda la región:</p>
+            $$ f_{XY}(x,y) = \frac{1}{\text{Área}(R)} = \frac{1}{4} $$
+        </div>
+
+        <div class="step">
+            <h3>Paso 2: Planteo de la Acumulada $F_W(w)$</h3>
+            <p>Queremos calcular la probabilidad acumulada $P(W \le w)$. Geométricamente, esto es el área de la franja centrada en la diagonal media, con ancho $w$.</p>
+            <p>Esto nos define dos límites de integración para la variable $y$ (despejando $y$ de las ecuaciones de las rectas):</p>
+            <ul>
+                <li><strong>Límite Superior (Recta Rosa):</strong> $X+Y-2 = w \implies y = 2 - x + w$</li>
+                <li><strong>Límite Inferior (Recta Negra):</strong> $-(X+Y-2) = w \implies y = 2 - x - w$</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>Paso 3: Cálculo de la Integral</h3>
+            <p>Planteamos la integral doble. La $x$ recorre todo el ancho (0 a 2) y la $y$ va de la recta negra a la recta rosa:</p>
+            $$ F_W(w) = \int_{0}^{2} \int_{2-x-w}^{2-x+w} \frac{1}{4} \, dy \, dx $$
+            
+            <p><strong>1. Resolvemos la integral interna (respecto a $y$):</strong></p>
+            $$ = \frac{1}{4} \int_{0}^{2} [y]_{2-x-w}^{2-x+w} \, dx $$
+            <p>Aplicamos Barro (Superior - Inferior):</p>
+            $$ = \frac{1}{4} \int_{0}^{2} \left[ (2 - x + w) - (2 - x - w) \right] \, dx $$
+            <p>Simplificamos algebraicamente (se cancelan los $2$ y las $x$):</p>
+            $$ = \frac{1}{4} \int_{0}^{2} \left[ 2 - x + w - 2 + x + w \right] \, dx $$
+            $$ = \frac{1}{4} \int_{0}^{2} 2w \, dx $$
+
+            <p><strong>2. Resolvemos la integral externa (respecto a $x$):</strong><br>
+            Nota que $2w$ actúa como una constante porque estamos integrando respecto a $x$.</p>
+            $$ = \frac{1}{4} [2wx]_{0}^{2} $$
+            $$ = \frac{1}{4} (2w(2) - 2w(0)) $$
+            $$ = \frac{1}{4} (4w) $$
+            $$ \mathbf{F_W(w) = w} $$
+        </div>
+
+        <div class="step">
+            <h3>Paso 4: Resultado Final y Definición por Tramos</h3>
+            <p>Reuniendo el rango calculado en los trucos ($0$ a $1$) con el resultado de la integral, la función queda:</p>
+            $$ F_W(w) = \begin{cases} 
+            0 & \text{si } w < 0 \\
+            w & \text{si } 0 \le w < 1 \\
+            1 & \text{si } w \ge 1 
+            \end{cases} $$
+
+            <p><strong>Interpretación del Gráfico:</strong><br>
+            Es una función lineal que comienza en el origen $(0,0)$, sube con pendiente de 45 grados hasta llegar al punto $(1,1)$, y a partir de ahí se mantiene constante horizontalmente en 1 (probabilidad total).</p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

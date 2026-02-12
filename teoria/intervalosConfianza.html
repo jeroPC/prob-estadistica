@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolución Ejercicio Final PyE - Intervalo de Confianza</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            font-size: 1.2em;
+        }
+        .highlight {
+            background-color: #e8f6f3;
+            padding: 15px;
+            border-left: 4px solid #1abc9c;
+            margin: 20px 0;
+        }
+        .data-box {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+        }
+        .result {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #27ae60;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px dashed #27ae60;
+            border-radius: 8px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Resolución: Intervalo de Confianza para la Media (Proceso de Poisson)</h1>
+
+    <p><strong>Enunciado resumido:</strong> Un radioisótopo emite partículas según un proceso de Poisson. Se registran 5 emisiones consecutivas. Construir un IC del 95% para la media del tiempo entre emisiones.</p>
+
+    <h2>1. Identificación de Variables y Datos</h2>
+    <ul>
+        <li><strong>Variable \(X\):</strong> Tiempo entre emisiones consecutivas.</li>
+        <li><strong>Distribución:</strong> \(X \sim \text{Exp}(\lambda)\) (Exponencial).</li>
+        <li><strong>Parámetro a estimar:</strong> La media \(\mu = \frac{1}{\lambda}\).</li>
+        <li><strong>Muestra (\(n=5\)):</strong> Tiempos registrados: 8:10, 8:16, 8:22, 8:32, 8:40 (inicio 8:00).</li>
+    </ul>
+
+    <div class="data-box">
+        <p>Calculamos los intervalos en minutos y convertimos a horas:</p>
+        $$ x_1 = 10 \text{min} = 1/6 \text{h} $$
+        $$ x_2 = 6 \text{min} = 1/10 \text{h} $$
+        $$ x_3 = 6 \text{min} = 1/10 \text{h} $$
+        $$ x_4 = 10 \text{min} = 1/6 \text{h} $$
+        $$ x_5 = 8 \text{min} = 8/60 \text{h} $$
+        <p>Suma de tiempos:</p>
+        $$ \sum_{i=1}^{5} x_i = \frac{40}{60} \text{h} = \frac{2}{3} \text{h} \approx 0.667 \text{h} $$
+    </div>
+
+    <h2>2. Selección del Pivote</h2>
+    <p>Dado que \(X \sim \text{Exp}(\lambda)\), utilizamos el siguiente pivote relacionado con la distribución Chi-cuadrado:</p>
+    
+    <div class="highlight">
+        $$ Q = 2\lambda \sum_{i=1}^{n} X_i \sim \chi^2_{2n} $$
+    </div>
+    
+    <p>Para \(n=5\), los grados de libertad son \(2n = 10\). Entonces: \(Q \sim \chi^2_{10}\).</p>
+
+    <h2>3. Planteo del Intervalo de Confianza</h2>
+    <p>Buscamos un nivel de confianza del 95% (\(1-\alpha = 0.95\)), por lo que \(\alpha = 0.05\).</p>
+    <p>Buscamos los valores críticos en la tabla \(\chi^2_{10}\):</p>
+    <ul>
+        <li>Límite inferior (acumula \(\alpha/2 = 0.025\)): \(\chi^2_{10; 0.025} = 3.247\) (llamémoslo \(a\)).</li>
+        <li>Límite superior (acumula \(1-\alpha/2 = 0.975\)): \(\chi^2_{10; 0.975} = 20.483\) (llamémoslo \(b\)).</li>
+    </ul>
+
+    <p>Planteamos la probabilidad:</p>
+    $$ P(a < 2\lambda \sum x_i < b) = 0.95 $$
+
+    <p>Despejamos \(\mu\) recordando que \(\lambda = 1/\mu\):</p>
+    $$ P\left( \frac{a}{2\sum x_i} < \frac{1}{\mu} < \frac{b}{2\sum x_i} \right) = 0.95 $$
+    
+    <p>Invertimos la inecuación (los límites se cruzan):</p>
+    $$ P\left( \frac{2\sum x_i}{b} < \mu < \frac{2\sum x_i}{a} \right) = 0.95 $$
+
+    <h2>4. Cálculo Numérico</h2>
+    <p>Sustituyendo \(\sum x_i = 2/3\):</p>
+
+    <p><strong>Límite Inferior (\(L_{inf}\)):</strong></p>
+    $$ L_{inf} = \frac{2 \cdot (2/3)}{20.483} = \frac{1.333}{20.483} \approx 0.06509 \text{ horas} $$
+
+    <p><strong>Límite Superior (\(L_{sup}\)):</strong></p>
+    $$ L_{sup} = \frac{2 \cdot (2/3)}{3.247} = \frac{1.333}{3.247} \approx 0.41064 \text{ horas} $$
+
+    <div class="result">
+        IC(95%) para \(\mu\): [ 0.0651 ; 0.4106 ] horas
+    </div>
+    
+    <p style="text-align: center; font-style: italic; color: #7f8c8d;">
+        (Equivalente en minutos: [ 3.9 min ; 24.6 min ])
+    </p>
+
+</div>
+
+</body>
+</html>
