@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ley de Probabilidad Total - Explicación Paso a Paso</title>
+    
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: #f8f9fa;
+            --text-color: #212529;
+            --accent-color: #0d6efd; /* Azul clásico */
+            --border-color: #dee2e6;
+            --code-bg: #e9ecef;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            color: var(--text-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        h2 {
+            color: #495057;
+            margin-top: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #495057;
+            margin-top: 20px;
+        }
+
+        .step-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--accent-color);
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .step-number {
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 15px;
+            margin-right: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        .note {
+            background-color: #e7f1ff;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .result-box {
+            background-color: #d1e7dd;
+            border: 1px solid #badbcc;
+            color: #0f5132;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Ajustes para las ecuaciones */
+        .mjx-chtml {
+            font-size: 110% !important;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ley de Probabilidad Total (Caso Continuo)</h1>
+    <p>
+        Este documento explica el método de "Condicionar y Descondicionar" basado en tus manuscritos. 
+        El objetivo es calcular la probabilidad de un evento complejo dividiéndolo en partes más simples.
+    </p>
+
+    <div class="note">
+        <strong>Concepto Clave:</strong> En lugar de hacer una integral doble complicada sobre una región, fijamos una variable ($X$), resolvemos el problema para ese caso específico, y luego integramos sobre todos los valores posibles de $X$.
+    </div>
+
+    <h2>Desglose Paso a Paso (Según tu Manuscrito)</h2>
+
+    <div class="step-card">
+        <div><span class="step-number">PASO 1</span> <strong>Identificar el Soporte</strong></div>
+        <p>Primero definimos la región donde las variables existen (el triángulo o rectángulo en el plano $XY$).</p>
+    </div>
+
+    <div class="step-card">
+        <div><span class="step-number">PASO 2</span> <strong>Calcular la Marginal de X</strong></div>
+        <p>Necesitamos saber cómo se comporta $X$ por sí sola. Integramos la densidad conjunta respecto a $Y$.</p>
+        $$ f_X(x) = \int_{-\infty}^{\infty} f_{XY}(x,y) \, dy $$
+        <p><em>En tu apunte:</em> Obtuviste $f_X(x) = 5x^4$.</p>
+    </div>
+
+    <div class="step-card">
+        <div><span class="step-number">PASO 3</span> <strong>Densidad Condicional de Y|X</strong></div>
+        <p>Calculamos la función de densidad de $Y$ asumiendo que $X$ ya ocurrió (es una constante). Es la conjunta dividida por la marginal.</p>
+        $$ f_{Y|X}(y|x) = \frac{f_{XY}(x,y)}{f_X(x)} $$
+        <p><em>En tu apunte:</em> Obtuviste $\frac{2y}{x^2}$.</p>
+    </div>
+
+    <div class="step-card">
+        <div><span class="step-number">PASO 4</span> <strong>Aplicar la Condición Pedida</strong></div>
+        <p>Calculamos la probabilidad del evento que nos piden (ej: $Y < X/2$), pero usando la densidad condicional del paso anterior. Aquí tratamos a $X$ como un número fijo.</p>
+        $$ P(A | X=x) = \int_{Región} f_{Y|X}(y|x) \, dy $$
+        <p><em>En tu apunte:</em> El resultado dio una constante $1/4$.</p>
+    </div>
+
+    <div class="step-card">
+        <div><span class="step-number">PASO 5</span> <strong>Ley Total (Descondicionar)</strong></div>
+        <p>Finalmente, usamos el Teorema de Probabilidad Total para obtener la probabilidad global. Integramos el resultado del Paso 4 multiplicado por la marginal del Paso 2.</p>
+        $$ P(A) = \int_{-\infty}^{\infty} P(A | X=x) \cdot f_X(x) \, dx $$
+        <p>Esto es lo que en tus notas llamas "Descondicionar".</p>
+    </div>
+
+    <div style="margin-top: 50px;">
+        <h2>Ejemplo Real Completo</h2>
+        <p>Vamos a resolver un ejercicio similar al tuyo para ver la mecánica.</p>
+        
+        <p><strong>Datos:</strong> Sea la densidad conjunta $f_{XY}(x,y) = 8xy$ en la región $0 < y < x < 1$.</p>
+        <p><strong>Objetivo:</strong> Calcular la probabilidad $P(Y > X/2)$.</p>
+
+        <h3>Resolución:</h3>
+
+        <p><strong>1. Marginal de X:</strong></p>
+        $$ f_X(x) = \int_0^x 8xy \, dy = 8x \left[ \frac{y^2}{2} \right]_0^x = 4x^3 \quad (\text{para } 0<x<1) $$
+
+        <p><strong>2. Condicional Y|X:</strong></p>
+        $$ f_{Y|X}(y|x) = \frac{8xy}{4x^3} = \frac{2y}{x^2} \quad (\text{para } 0<y<x) $$
+
+        <p><strong>3. Probabilidad Condicional (el evento $Y > X/2$ dado $X=x$):</strong></p>
+        $$ P(Y > X/2 \mid X=x) = \int_{x/2}^{x} \frac{2y}{x^2} \, dy $$
+        $$ = \frac{1}{x^2} \left[ y^2 \right]_{x/2}^{x} = \frac{1}{x^2} \left( x^2 - \frac{x^2}{4} \right) = 1 - \frac{1}{4} = \frac{3}{4} $$
+
+        <p><strong>4. Ley Total (Descondicionar):</strong></p>
+        $$ P(Y > X/2) = \int_0^1 \underbrace{\frac{3}{4}}_{P(A|x)} \cdot \underbrace{4x^3}_{f_X(x)} \, dx $$
+        $$ = 3 \int_0^1 x^3 \, dx = 3 \left[ \frac{x^4}{4} \right]_0^1 = \frac{3}{4} $$
+
+        <div class="result-box">
+            Resultado Final: La probabilidad es 0.75
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
