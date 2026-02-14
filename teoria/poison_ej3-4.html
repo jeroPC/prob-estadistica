@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen Poisson: Adelgazamiento y Ejercicio Meteoritos</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .highlight {
+            background-color: #e8f4fc;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .tip {
+            background-color: #eafaf1;
+            border-left: 5px solid #2ecc71;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .warning {
+            background-color: #fdedec;
+            border-left: 5px solid #e74c3c;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #34495e;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .exercise-box {
+            border: 2px solid #bdc3c7;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .step {
+            font-weight: bold;
+            color: #2980b9;
+            margin-top: 15px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Resumen Maestro: Procesos de Poisson</h1>
+
+    <div class="container">
+        <h2>1. La Propiedad de Adelgazamiento (Thinning)</h2>
+        <p>Esta propiedad nos permite descomponer un proceso de Poisson complejo en varios procesos más simples e <strong>independientes</strong>.</p>
+        
+        <div class="highlight">
+            <strong>La Fórmula Mágica:</strong><br>
+            Si tienes una tasa total \(\lambda_{total}\) y una probabilidad de clasificación \(p\):
+            $$ \lambda_{nuevo} = \lambda_{total} \times p $$
+            Los sub-procesos resultantes (ej. "Tipo A" y "Tipo B") son <strong>independientes</strong> entre sí.
+        </div>
+
+        <h3>¿Cuándo aplicar el adelgazamiento?</h3>
+        <table>
+            <tr>
+                <th>Situación</th>
+                <th>¿Aplicar?</th>
+                <th>Por qué</th>
+            </tr>
+            <tr>
+                <td>Preguntas "Cruzadas" (ej. Dato sobre 'chicos', pregunta sobre 'total')</td>
+                <td>✅ SÍ</td>
+                <td>Desacopla la dependencia. El dato de uno no afecta al otro.</td>
+            </tr>
+            <tr>
+                <td>Te dan probabilidades explícitas de clasificación (\(p\) y \(1-p\))</td>
+                <td>✅ SÍ</td>
+                <td>Es más fácil trabajar con dos \(\lambda\) pequeñas que con fórmulas condicionales.</td>
+            </tr>
+            <tr>
+                <td>Te preguntan solo por el <strong>Total</strong> (sin importar el tipo)</td>
+                <td>❌ NO</td>
+                <td>Usa la \(\lambda\) original. Separar solo complicaría las sumas.</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="container">
+        <h2>2. Las Tres Lentes: Poisson, Exponencial y Gamma</h2>
+        <p>Es el mismo fenómeno visto desde perspectivas temporales distintas.</p>
+
+        <table style="text-align: center;">
+            <thead>
+                <tr>
+                    <th>Distribución</th>
+                    <th>¿Qué mide?</th>
+                    <th>Variable Aleatoria</th>
+                    <th>Cuándo usarla</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Poisson</strong></td>
+                    <td>Conteo de eventos</td>
+                    <td>Discreta (0, 1, 2...)</td>
+                    <td>"¿Cuántos ocurren en un tiempo fijo?"</td>
+                </tr>
+                <tr>
+                    <td><strong>Exponencial</strong></td>
+                    <td>Tiempo hasta el <strong>1º</strong> evento (o entre dos consecutivos)</td>
+                    <td>Continua (Tiempo)</td>
+                    <td>"¿Cuánto tiempo pasa hasta el siguiente?"<br><em>(Propiedad de falta de memoria)</em></td>
+                </tr>
+                <tr>
+                    <td><strong>Gamma</strong></td>
+                    <td>Tiempo hasta el <strong>n-ésimo</strong> evento</td>
+                    <td>Continua (Tiempo)</td>
+                    <td>"¿Cuánto tiempo pasará hasta que ocurran 3 eventos?"<br><em>(Suma de exponenciales)</em></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <h2>3. Resolución del Ejercicio: "Los Meteoritos"</h2>
+        
+        <div class="exercise-box">
+            <h3>Enunciado Simplificado</h3>
+            <p><strong>Datos:</strong></p>
+            <ul>
+                <li>Intensidad total de impactos: \(\lambda = 0.5\) por año.</li>
+                <li>Probabilidad de Cráter Chico (CC): \(0.7\).</li>
+                <li>Probabilidad de Cráter Grande (CG): \(0.3\).</li>
+            </ul>
+            <p><strong>Condición:</strong> Se sabe que en 1.5 años hubo <strong>exactamente 1 cráter chico</strong>.</p>
+            <p><strong>Pregunta:</strong> Calcular la probabilidad de que en el <strong>primer año</strong> hayan impactado <strong>exactamente 2 meteoros</strong> (en total).</p>
+        </div>
+
+        <h3>Solución "Limpia" usando Adelgazamiento</h3>
+
+        <span class="step">Paso 1: Separar los procesos</span>
+        <p>Calculamos las nuevas intensidades para trabajar con independencia:</p>
+        <ul>
+            <li><strong>Chicos (CC):</strong> \(\lambda_{cc} = 0.5 \times 0.7 = \mathbf{0.35}\)</li>
+            <li><strong>Grandes (CG):</strong> \(\lambda_{cg} = 0.5 \times 0.3 = \mathbf{0.15}\)</li>
+        </ul>
+        <p><em>Ahora \(CC\) y \(CG\) son independientes. Lo que pase con los grandes no le importa a los chicos.</em></p>
+
+        <span class="step">Paso 2: Analizar el objetivo</span>
+        <p>Queremos que el <strong>Total en el año 1 sea 2</strong> (\(N(1)=2\)).<br>
+        Como \(Total = CC + CG\), las únicas formas de sumar 2 son:</p>
+        <ol>
+            <li>2 Chicos y 0 Grandes.</li>
+            <li>1 Chico y 1 Grande.</li>
+            <li>0 Chicos y 2 Grandes.</li>
+        </ol>
+        <p>Pero tenemos una restricción: <strong>En 1.5 años solo hubo 1 Chico en total.</strong> Por lo tanto, es <em>imposible</em> tener 2 chicos en el primer año. La opción 1 queda descartada.</p>
+
+        <span class="step">Paso 3: Plantear los Casos Posibles</span>
+        <p>Solo nos quedan dos escenarios posibles para cumplir la condición:</p>
+        
+        <div class="tip">
+            <strong>Truco clave:</strong> Sabemos que hay 1 Chico en el intervalo \([0, 1.5]\). Como es un proceso de Poisson, la ubicación de ese evento en el tiempo es <strong>Uniforme</strong>.
+            <ul>
+                <li>Probabilidad de que el Chico caiga en el año 1 \([0, 1]\): \(p = \frac{1}{1.5} = \frac{2}{3}\)</li>
+                <li>Probabilidad de que el Chico caiga después \([1, 1.5]\): \(q = \frac{0.5}{1.5} = \frac{1}{3}\)</li>
+            </ul>
+        </div>
+
+        <p><strong>ESCENARIO A: El Chico cae en el primer año (Prob: 2/3)</strong><br>
+        Para llegar a 2 impactos totales, necesitamos <strong>1 Grande</strong> en ese año.</p>
+        $$ P(A) = \frac{2}{3} \times P(N_{CG}(1) = 1) $$
+
+        <p><strong>ESCENARIO B: El Chico NO cae en el primer año (Prob: 1/3)</strong><br>
+        Para llegar a 2 impactos totales, necesitamos <strong>2 Grandes</strong> en ese año.</p>
+        $$ P(B) = \frac{1}{3} \times P(N_{CG}(1) = 2) $$
+
+        <span class="step">Paso 4: Calcular y Sumar</span>
+        <p>Usamos la fórmula de Poisson \(P(X=k) = \frac{e^{-\lambda}\lambda^k}{k!}\) con \(\lambda_{CG}=0.15\).</p>
+
+        <p><strong>Cálculo Escenario A:</strong></p>
+        $$ P(N_{CG}(1)=1) = \frac{e^{-0.15} \cdot 0.15^1}{1!} \approx 0.8607 \cdot 0.15 = 0.1291 $$
+        $$ \text{Total A} = \frac{2}{3} \cdot 0.1291 = \mathbf{0.0860} $$
+
+        <p><strong>Cálculo Escenario B:</strong></p>
+        $$ P(N_{CG}(1)=2) = \frac{e^{-0.15} \cdot 0.15^2}{2!} \approx \frac{0.8607 \cdot 0.0225}{2} = 0.00968 $$
+        $$ \text{Total B} = \frac{1}{3} \cdot 0.00968 = \mathbf{0.0032} $$
+
+        <span class="step">Resultado Final</span>
+        $$ P_{total} = 0.0860 + 0.0032 = \mathbf{0.0892} $$
+
+        <div class="highlight" style="text-align: center; font-size: 1.2em;">
+            El resultado coincide perfectamente con el manuscrito: <strong>0.089</strong>
+        </div>
+    </div>
+
+</body>
+</html>
