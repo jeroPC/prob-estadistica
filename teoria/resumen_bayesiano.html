@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estimación Bayesiana - Inferencia Estadística</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Source+Code+Pro:wght@400;600&display=swap');
+
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --code-bg: #f8f9fa;
+            --border-color: #e1e4e8;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-left: 5px solid var(--accent-color);
+            padding-left: 10px;
+            margin-top: 30px;
+            font-size: 20px;
+        }
+
+        h3 {
+            color: #555;
+            font-size: 18px;
+            margin-top: 25px;
+        }
+
+        .meta-info {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .math-block {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Source Code Pro', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+
+        .note {
+            background-color: #e8f4fd;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .step-box {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 0.8em;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Estilos específicos para impresión */
+        @media print {
+            body { background-color: white; }
+            .container { box-shadow: none; padding: 0; width: 100%; }
+            .math-block { background-color: #f5f5f5 !important; -webkit-print-color-adjust: exact; }
+            .note { background-color: #f0f8ff !important; -webkit-print-color-adjust: exact; }
+            h2 { page-break-before: auto; }
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Estimación Bayesiana: Teoría y Práctica</h1>
+        <div class="meta-info">
+            <p><strong>Materia:</strong> Probabilidad y Estadística (Ingeniería en Computación)</p>
+            <p><strong>Tema:</strong> Inferencia Bayesiana, Función de Pérdida y Predicción</p>
+        </div>
+    </header>
+
+    <section>
+        <h2>I. Fundamentos Teóricos</h2>
+        
+        <h3>1. El Teorema de Bayes para Densidades</h3>
+        <p>A diferencia de la estadística clásica (frecuentista), la estadística bayesiana trata al parámetro desconocido \(\theta\) como una variable aleatoria. Actualizamos nuestra creencia inicial (Priori) con los datos observados (Verosimilitud) para obtener una nueva creencia (Posterior).</p>
+        
+        <div class="math-block">
+            $$ f(\theta | \underline{x}) = \frac{L(\theta) \cdot f_{priori}(\theta)}{\int_{-\infty}^{\infty} L(\theta) \cdot f_{priori}(\theta) \, d\theta} $$
+        </div>
+        <ul>
+            <li><strong>\(L(\theta)\):</strong> Función de Verosimilitud (Likelihood). Es la densidad conjunta de la muestra.</li>
+            <li><strong>\(f_{priori}(\theta)\):</strong> Información previa sobre el parámetro.</li>
+            <li><strong>Denominador:</strong> Constante de normalización para asegurar que el área bajo la curva sea 1.</li>
+        </ul>
+
+        <h3>2. Definición del Dominio (Soporte)</h3>
+        <p>Cuando la función de densidad depende de \(\theta\) en sus límites (indicadora), el dominio válido para \(\theta\) a posteriori está restringido por <strong>toda</strong> la muestra simultáneamente.</p>
+        <div class="note">
+            <strong>Regla de Oro:</strong> <br>
+            Si \( \theta < w < \theta + k \):
+            <ul>
+                <li>El límite inferior de \(\theta\) sale del dato <strong>máximo</strong> de la muestra: \(\theta > \max(w_i) - k\).</li>
+                <li>El límite superior de \(\theta\) sale del dato <strong>mínimo</strong> de la muestra: \(\theta < \min(w_i)\).</li>
+            </ul>
+        </div>
+
+        <h3>3. Función de Pérdida Cuadrática</h3>
+        <p>El "Estimador Bayesiano" es un único número que resume toda la distribución a posteriori. ¿Cuál elegir? Depende de la función de pérdida. Bajo <strong>pérdida cuadrática</strong> (minimizar el Error Cuadrático Medio), el estimador óptimo es la <strong>Esperanza Matemática</strong>.</p>
+        <div class="math-block">
+            $$ \hat{\theta}_{ Bayes} = E[\theta | \underline{x}] = \int \theta \cdot f(\theta | \underline{x}) \, d\theta $$
+        </div>
+    </section>
+
+    <section>
+        <h2>II. Resolución Práctica (Los 3 Casos)</h2>
+        <p><strong>Datos del Problema:</strong></p>
+        <ul>
+            <li>Modelo: \(f(w) = \frac{1}{2}(w-\theta) \cdot \mathbb{I}_{(\theta, \theta+2)}(w)\)</li>
+            <li>Muestra: \( \{4.8, \ 5.7, \ 4.9\} \)</li>
+            <li>Priori: \(\theta \sim U(0,8) \rightarrow f(\theta)=\frac{1}{8}\)</li>
+        </ul>
+
+        <hr>
+
+        <h3>Caso 1: Hallar la Función a Posteriori</h3>
+        <p>Objetivo: Encontrar la expresión analítica de \(f(\theta | \underline{x})\).</p>
+        
+        <div class="step-box">
+            <span class="step-title">Paso A: Definir el Dominio</span>
+            <p>Usamos la regla del máximo y mínimo:</p>
+            <ul>
+                <li>\(\theta < \min(4.8, 4.9, 5.7) \rightarrow \theta < 4.8\)</li>
+                <li>\(\theta > \max(4.8, 4.9, 5.7) - 2 \rightarrow \theta > 3.7\)</li>
+            </ul>
+            <strong>Intervalo válido: \((3.7, \ 4.8)\)</strong>
+        </div>
+
+        <div class="step-box">
+            <span class="step-title">Paso B: Plantear el Núcleo (Numerador)</span>
+            $$ \text{Num} = \text{Priori} \cdot \prod_{i=1}^{3} f(w_i|\theta) $$
+            $$ \text{Num} = \frac{1}{8} \cdot \left[ \frac{1}{2}(4.8-\theta) \cdot \frac{1}{2}(5.7-\theta) \cdot \frac{1}{2}(4.9-\theta) \right] $$
+        </div>
+
+        <div class="step-box">
+            <span class="step-title">Paso C: Calcular la Constante K (Denominador)</span>
+            $$ K = \int_{3.7}^{4.8} \frac{1}{64}(4.8-\theta)(5.7-\theta)(4.9-\theta) \, d\theta \approx 0.864 $$
+        </div>
+
+        <div class="note">
+            <strong>Resultado (Caso 1):</strong><br>
+            $$ f(\theta | \underline{x}) = \frac{(4.8-\theta)(5.7-\theta)(4.9-\theta)}{0.864 \cdot 64} \quad \text{para } 3.7 < \theta < 4.8 $$
+        </div>
+
+        <hr>
+
+        <h3>Caso 2: Hallar el Estimador Bayesiano</h3>
+        <p>Objetivo: Obtener un valor puntual \(\hat{\theta}\) asumiendo pérdida cuadrática.</p>
+
+        <div class="step-box">
+            <span class="step-title">Fórmula</span>
+            Calculamos la media de la función hallada en el Caso 1.
+            $$ \hat{\theta} = \int_{-\infty}^{\infty} \theta \cdot f(\theta | \underline{x}) \, d\theta $$
+        </div>
+
+        <div class="step-box">
+            <span class="step-title">Reemplazo y Resolución</span>
+            $$ \hat{\theta} = \int_{3.7}^{4.8} \theta \cdot \left[ \frac{(4.8-\theta)(5.7-\theta)(4.9-\theta)}{55.296} \right] d\theta $$
+            <p>Al resolver esta integral definida (generalmente con calculadora o software en exámenes complejos):</p>
+        </div>
+
+        <div class="note">
+            <strong>Resultado (Caso 2):</strong><br>
+            $$ \hat{\theta}_{Bayes} \approx 3.96 $$
+        </div>
+
+        <hr>
+
+        <h3>Caso 3: Probabilidad Futura (Método Plug-in)</h3>
+        <p>Objetivo: Calcular \(P(W > 5)\) para una nueva observación, usando el estimador obtenido.</p>
+
+        <div class="step-box">
+            <span class="step-title">Teoría</span>
+            Asumimos que el parámetro verdadero es exactamente \(\hat{\theta} = 3.96\). Reemplazamos este valor en la función de densidad original del problema.
+        </div>
+
+        <div class="step-box">
+            <span class="step-title">Reemplazo</span>
+            Función original: \(f(w) = \frac{1}{2}(w - \theta)\) en \((\theta, \theta+2)\).<br>
+            Con \(\hat{\theta}=3.96\), el intervalo es \((3.96, \ 5.96)\).
+            $$ f(w | \hat{\theta}) = \frac{1}{2}(w - 3.96) \quad \text{si } 3.96 < w < 5.96 $$
+        </div>
+
+        <div class="step-box">
+            <span class="step-title">Resolución</span>
+            Nos piden \(P(W > 5)\). Integramos desde 5 hasta el límite superior (5.96).
+            $$ P(W>5) = \int_{5.0}^{5.96} \frac{1}{2}(w - 3.96) \, dw $$
+            $$ = \frac{1}{2} \left[ \frac{w^2}{2} - 3.96w \right]_{5.0}^{5.96} $$
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

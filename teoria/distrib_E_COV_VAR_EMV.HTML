@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen de Distribuciones de Probabilidad y Estadística</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1400px; /* Aumentado un poco para que quepa la nueva columna */
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+        }
+        h1 { text-align: center; margin-bottom: 40px; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 0.9em;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e6f7ff;
+        }
+        
+        .formula {
+            font-size: 1.1em;
+        }
+        
+        .note {
+            font-size: 0.85em;
+            color: #666;
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .property-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+        }
+        ul {
+            margin-top: 0;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Resumen de Distribuciones: Propiedades y Estimadores MV</h1>
+    <p style="text-align: center;">Basado en las tablas de Probabilidad y Estadística (FIUBA).</p>
+
+    <h2>1. Distribuciones Discretas Univariadas</h2>
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Distribución</th>
+                    <th>Notación</th>
+                    <th>\(p_{X}(x)\) (Probabilidad)</th>
+                    <th>Soporte</th>
+                    <th>Parámetros</th>
+                    <th>\(E[X]\)</th>
+                    <th>\(var(X)\)</th>
+                    <th>Estimador MV (\(\hat{\theta}\))</th>
+                    <th>Ejemplo de Uso</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Bernoulli</td>
+                    <td>\(Ber(p)\)</td>
+                    <td>\(p^{x}(1-p)^{1-x}\)</td>
+                    <td>\(\{0, 1\}\)</td>
+                    <td>\(p\in(0,1)\)</td>
+                    <td>\(p\)</td>
+                    <td>\(p(1-p)\)</td>
+                    <td>\(\hat{p} = \bar{X}\)</td>
+                    <td>Estado de un bit.</td>
+                </tr>
+                <tr>
+                    <td>Binomial</td>
+                    <td>\(\mathcal{B}(n,p)\)</td>
+                    <td>\(\binom{n}{x}p^{x}(1-p)^{n-x}\)</td>
+                    <td>\([0,n]\)</td>
+                    <td>\(p\in(0,1), n\in\mathbb{N}\)</td>
+                    <td>\(np\)</td>
+                    <td>\(np(1-p)\)</td>
+                    <td>\(\hat{p} = \frac{\bar{X}}{n}\)</td>
+                    <td>Paquetes corruptos.</td>
+                </tr>
+                <tr>
+                    <td>Geométrica</td>
+                    <td>\(\mathcal{G}(p)\)</td>
+                    <td>\((1-p)^{x-1}p\)</td>
+                    <td>\(\mathbb{N}\)</td>
+                    <td>\(p\in(0,1)\)</td>
+                    <td>\(1/p\)</td>
+                    <td>\((1-p)/p^{2}\)</td>
+                    <td>\(\hat{p} = \frac{1}{\bar{X}}\)</td>
+                    <td>Intentos hasta éxito.</td>
+                </tr>
+                <tr>
+                    <td>Pascal</td>
+                    <td>\(Pas(k,p)\)</td>
+                    <td>\(\binom{x-1}{k-1}(1-p)^{x-k}p^{k}\)</td>
+                    <td>\(\mathbb{Z}_{k}\)</td>
+                    <td>\(p, k\)</td>
+                    <td>\(k/p\)</td>
+                    <td>\(k(1-p)/p^{2}\)</td>
+                    <td>\(\hat{p} = \frac{k}{\bar{X}}\)</td>
+                    <td>Intentos hasta \(k\) éxitos.</td>
+                </tr>
+                <tr>
+                    <td>Poisson</td>
+                    <td>\(Poi(\mu)\)</td>
+                    <td>\((\mu^{x}e^{-\mu})/x!\)</td>
+                    <td>\(\mathbb{Z}_{0}\)</td>
+                    <td>\(\mu>0\)</td>
+                    <td>\(\mu\)</td>
+                    <td>\(\mu\)</td>
+                    <td>\(\hat{\mu} = \bar{X}\)</td>
+                    <td>Arribos por minuto.</td>
+                </tr>
+                <tr>
+                    <td>Hipergeométrica</td>
+                    <td>\(\mathcal{H}(N,d,n)\)</td>
+                    <td>\(\frac{\binom{d}{x}\binom{N-d}{n-x}}{\binom{N}{n}}\)</td>
+                    <td>\([[m,M]]\)</td>
+                    <td>\(d, n, N\)</td>
+                    <td>\(\frac{nd}{N}\)</td>
+                    <td>Ver nota</td>
+                    <td>(Numérico / Complejo)</td>
+                    <td>Control de calidad s/repo.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>2. Distribuciones Continuas Univariadas</h2>
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Distribución</th>
+                    <th>Notación</th>
+                    <th>\(f_{X}(x)\) (Densidad)</th>
+                    <th>Soporte</th>
+                    <th>Parámetros</th>
+                    <th>\(E[X]\)</th>
+                    <th>\(var(X)\)</th>
+                    <th>Estimador MV (\(\hat{\theta}\))</th>
+                    <th>Ejemplo de Uso</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Uniforme</td>
+                    <td>\(\mathcal{U}[a,b]\)</td>
+                    <td>\(1/(b-a)\)</td>
+                    <td>\([a, b]\)</td>
+                    <td>\(a < b\)</td>
+                    <td>\(\frac{a+b}{2}\)</td>
+                    <td>\(\frac{(b-a)^{2}}{12}\)</td>
+                    <td>\(\hat{a}=\min(X_i)\)<br>\(\hat{b}=\max(X_i)\)</td>
+                    <td>Error cuantización.</td>
+                </tr>
+                <tr>
+                    <td>Exponencial</td>
+                    <td>\(\mathcal{E}(\lambda)\)</td>
+                    <td>\(\lambda e^{-\lambda x}\)</td>
+                    <td>\([0,+\infty)\)</td>
+                    <td>\(\lambda>0\)</td>
+                    <td>\(1/\lambda\)</td>
+                    <td>\(1/\lambda^{2}\)</td>
+                    <td>\(\hat{\lambda} = \frac{1}{\bar{X}}\)</td>
+                    <td>Vida útil sin memoria.</td>
+                </tr>
+                <tr>
+                    <td>Gamma</td>
+                    <td>\(\Gamma(\nu,\lambda)\)</td>
+                    <td>\(\frac{\lambda^{\nu}}{\Gamma(\nu)}x^{\nu-1}e^{-\lambda x}\)</td>
+                    <td>\([0,+\infty)\)</td>
+                    <td>\(\nu, \lambda\)</td>
+                    <td>\(\nu/\lambda\)</td>
+                    <td>\(\nu/\lambda^{2}\)</td>
+                    <td>(Numérico)<br>Eq: \(\ln(\hat{\nu})-\psi(\hat{\nu}) = \dots\)</td>
+                    <td>Procesos de Poisson.</td>
+                </tr>
+                <tr>
+                    <td>Normal</td>
+                    <td>\(\mathcal{N}(\mu,\sigma^{2})\)</td>
+                    <td>\(\frac{e^{\frac{-(x-\mu)^{2}}{2\sigma^{2}}}}{\sqrt{2\pi}\sigma}\)</td>
+                    <td>\(\mathbb{R}\)</td>
+                    <td>\(\mu, \sigma^{2}\)</td>
+                    <td>\(\mu\)</td>
+                    <td>\(\sigma^{2}\)</td>
+                    <td>\(\hat{\mu} = \bar{X}\)<br>\(\hat{\sigma}^2 = \frac{\sum(X_i-\bar{X})^2}{n}\) \(\dagger\)</td>
+                    <td>Errores, ruido, TCL.</td>
+                </tr>
+                <tr>
+                    <td>Chi cuadrado</td>
+                    <td>\(\chi_{k}^{2}\)</td>
+                    <td>Ver nota</td>
+                    <td>\([0,+\infty)\)</td>
+                    <td>\(k\in\mathbb{N}\)</td>
+                    <td>\(k\)</td>
+                    <td>\(2k\)</td>
+                    <td>(Numérico)</td>
+                    <td>Varianza muestral.</td>
+                </tr>
+                <tr>
+                    <td>t-Student</td>
+                    <td>\(t_{\nu}\)</td>
+                    <td>Ver nota</td>
+                    <td>\(\mathbb{R}\)</td>
+                    <td>\(\nu>0\)</td>
+                    <td>\(0\)</td>
+                    <td>\(\frac{\nu}{\nu-2}\)</td>
+                    <td>(Numérico)</td>
+                    <td>Muestras pequeñas.</td>
+                </tr>
+                <tr>
+                    <td>Weibull</td>
+                    <td>\(Wei(c,\alpha)\)</td>
+                    <td>\(\frac{c}{\alpha}(\frac{x}{\alpha})^{c-1}e^{-(\frac{x}{\alpha})^{c}}\)</td>
+                    <td>\([0,+\infty)\)</td>
+                    <td>\(c, \alpha\)</td>
+                    <td>Ver nota</td>
+                    <td>Ver nota</td>
+                    <td>(Numérico)</td>
+                    <td>Fatiga materiales.</td>
+                </tr>
+                <tr>
+                    <td>Rayleigh</td>
+                    <td>\(Ray(\sigma)\)</td>
+                    <td>\(\frac{x}{\sigma^{2}}e^{\frac{-x^{2}}{2\sigma^{2}}}\)</td>
+                    <td>\([0,+\infty)\)</td>
+                    <td>\(\sigma>0\)</td>
+                    <td>\(\sigma\sqrt{\frac{\pi}{2}}\)</td>
+                    <td>\(\frac{4-\pi}{2}\sigma^{2}\)</td>
+                    <td>\(\hat{\sigma} = \sqrt{\frac{\sum X_i^2}{2n}}\)</td>
+                    <td>Magnitud vectores.</td>
+                </tr>
+                <tr>
+                    <td>Pareto</td>
+                    <td>\(Par(m,\alpha)\)</td>
+                    <td>\(\frac{\alpha m^{\alpha}}{x^{\alpha+1}}\)</td>
+                    <td>\([m,+\infty)\)</td>
+                    <td>\(m, \alpha\)</td>
+                    <td>\(\frac{\alpha m}{\alpha-1}\)</td>
+                    <td>Ver nota</td>
+                    <td>\(\hat{m} = \min(X_i)\)<br>\(\hat{\alpha} = \frac{n}{\sum \ln(X_i/\hat{m})}\)</td>
+                    <td>Colas pesadas.</td>
+                </tr>
+                <tr>
+                    <td>Beta</td>
+                    <td>\(\beta(a,b)\)</td>
+                    <td>\(\frac{x^{a-1}(1-x)^{b-1}}{B(a,b)}\)</td>
+                    <td>\((0,1)\)</td>
+                    <td>\(a,b\)</td>
+                    <td>\(\frac{a}{a+b}\)</td>
+                    <td>Ver nota</td>
+                    <td>(Numérico)</td>
+                    <td>Proporciones.</td>
+                </tr>
+                <tr>
+                    <td>Cauchy</td>
+                    <td>\(Cau(x_{0})\)</td>
+                    <td>\(\frac{1}{\pi\gamma[1+(\frac{x-x_0}{\gamma})^2]}\)</td>
+                    <td>\(\mathbb{R}\)</td>
+                    <td>\(x_0, \gamma\)</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>(Numérico)</td>
+                    <td>Resonancia.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="note">
+        <strong>Notas sobre Estimadores:</strong>
+        <ul>
+            <li><strong>(Numérico):</strong> Indica que no existe una fórmula cerrada simple; se resuelve maximizando la función de verosimilitud (Log-Likelihood) mediante métodos iterativos (ej. Newton-Raphson).</li>
+            <li><strong>\(\dagger\) Normal:</strong> El EMV de la varianza divide por \(n\) (es sesgado). El estimador insesgado \(S^2\) divide por \(n-1\).</li>
+            <li><strong>Pareto:</strong> El estimador de \(m\) es el mínimo muestral.</li>
+        </ul>
+    </div>
+
+    <h2>3. Propiedades de Esperanza, Varianza y Covarianza</h2>
+    <div class="properties-grid">
+        <div class="property-box">
+            <h3>Esperanza Matemática \(E[X]\)</h3>
+            <p>Operador Lineal:</p>
+            <ul>
+                <li>\(E[c] = c\) (constante)</li>
+                <li>\(E[aX + bY] = aE[X] + bE[Y]\)</li>
+                <li>Si \(X, Y\) independientes: \(E[XY] = E[X]E[Y]\)</li>
+            </ul>
+        </div>
+        <div class="property-box">
+            <h3>Varianza \(Var(X)\)</h3>
+            <p>No es lineal. Medida de dispersión:</p>
+            <ul>
+                <li>\(Var(c) = 0\)</li>
+                <li>\(Var(aX + b) = a^2 Var(X)\)</li>
+                <li>\(Var(X \pm Y) = Var(X) + Var(Y) \pm 2Cov(X,Y)\)</li>
+                <li>Definición: \(Var(X) = E[X^2] - (E[X])^2\)</li>
+            </ul>
+        </div>
+        <div class="property-box">
+            <h3>Covarianza \(Cov(X,Y)\)</h3>
+            <p>Relación lineal entre variables:</p>
+            <ul>
+                <li>\(Cov(X,Y) = E[(X-\mu_x)(Y-\mu_y)]\)</li>
+                <li>\(Cov(X,Y) = E[XY] - E[X]E[Y]\)</li>
+                <li>Si \(X, Y\) independientes \(\implies Cov(X,Y) = 0\)</li>
+                <li>\(Cov(aX, bY) = ab \cdot Cov(X,Y)\)</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>4. Familias Exponenciales y Estadísticos Suficientes</h2>
+    <p>Una distribución pertenece a la familia exponencial si su densidad se factoriza como \(f(x|\theta) = h(x) c(\theta) \exp(\sum w_i(\theta) T_i(x))\). \(T(x)\) es el Estadístico Suficiente.</p>
+    
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Distribución</th>
+                    <th>Parámetro Desconocido</th>
+                    <th>Estadístico Suficiente \(T(\mathbf{X})\) (Muestra tamaño \(n\))</th>
+                    <th>Pertenece a la Familia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Bernoulli / Binomial</td>
+                    <td>\(p\)</td>
+                    <td>\(\sum_{i=1}^n X_i\)</td>
+                    <td>✅ Sí</td>
+                </tr>
+                <tr>
+                    <td>Poisson</td>
+                    <td>\(\mu\)</td>
+                    <td>\(\sum_{i=1}^n X_i\)</td>
+                    <td>✅ Sí</td>
+                </tr>
+                <tr>
+                    <td>Geométrica / Pascal</td>
+                    <td>\(p\)</td>
+                    <td>\(\sum_{i=1}^n X_i\)</td>
+                    <td>✅ Sí</td>
+                </tr>
+                <tr>
+                    <td>Normal</td>
+                    <td>\(\mu\) (con \(\sigma^2\) conocido)</td>
+                    <td>\(\sum_{i=1}^n X_i\)</td>
+                    <td>✅ Sí</td>
+                </tr>
+                <tr>
+                    <td>Normal</td>
+                    <td>\(\sigma^2\) (con \(\mu\) conocido)</td>
+                    <td>\(\sum_{i=1}^n (X_i - \mu)^2\)</td>
+                    <td>✅ Sí</td>
+                </tr>
+                <tr>
+                    <td>Normal</td>
+                    <td>\(\mu\) y \(\sigma^2\)</td>
+                    <td>\((\sum X_i, \sum X_i^2)\)</td>
+                    <td>✅ Sí (k=2)</td>
+                </tr>
+                <tr>
+                    <td>Exponencial</td>
+                    <td>\(\lambda\)</td>
+                    <td>\(\sum_{i=1}^n X_i\)</td>
+                    <td>✅ Sí</td>
+                </tr>
+                <tr>
+                    <td>Gamma</td>
+                    <td>\(\nu, \lambda\)</td>
+                    <td>\((\sum \ln(X_i), \sum X_i)\)</td>
+                    <td>✅ Sí</td>
+                </tr>
+                <tr>
+                    <td>Uniforme</td>
+                    <td>\(\theta\) en \([0, \theta]\)</td>
+                    <td>\(X_{(n)} = \max(X_i)\)</td>
+                    <td>❌ No (Soporte depende del parámetro)</td>
+                </tr>
+                <tr>
+                    <td>Pareto</td>
+                    <td>\(m\) (mínimo)</td>
+                    <td>\(X_{(1)} = \min(X_i)\)</td>
+                    <td>❌ No (Soporte depende del parámetro)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
